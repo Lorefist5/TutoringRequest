@@ -1,4 +1,5 @@
-﻿using TutoringRequest.Models.Domain;
+﻿using System.Linq.Expressions;
+using TutoringRequest.Models.Domain;
 
 namespace TutoringRequest.Data.Repositories.Interfaces;
 

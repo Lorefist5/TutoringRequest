@@ -11,22 +11,45 @@ namespace TutoringRequest.Api.Controllers;
 public class TutorController : ControllerBase
 {
     private readonly ITutorRepository _tutorRepository;
-
-    public TutorController(ITutorRepository tutorRepository)
+    private readonly IUnitOfWork _unitOfWork;
+    public TutorController(IUnitOfWork unitOfWork)
     {
-        this._tutorRepository = tutorRepository;
+        this._tutorRepository = unitOfWork.TutorRepository;
+        this._unitOfWork = unitOfWork;
     }
     [HttpGet]
     public IActionResult GetAll()
     {
-        return Ok(_tutorRepository.GetAll());
+        return Ok(_tutorRepository.GetAll()); //Status code of 200
+    }
+    [HttpGet("{id:guid}")]
+    public IActionResult GetTutor( Guid id)
+    {
+        Tutor? tutor = _unitOfWork.TutorRepository.FirstOrDefault(t => t.Id == id);
+        if (tutor == null) return NotFound();
+        TutorDto tutorDto = new TutorDto() { TutorName = tutor.TutorName, StudentNumber = tutor.StudentNumber, AvailabilitySlots = tutor.AvailabilitySlots};
+        return Ok(tutorDto);
+    }
+    [HttpGet("byStudentNumber")]
+    public IActionResult GetTutorByName([FromHeader] string studentNumber)
+    {
+        Tutor? tutor = _unitOfWork.TutorRepository.FirstOrDefault(t => t.StudentNumber == studentNumber);
+        if (tutor == null) return NotFound();
+        TutorDto tutorDto = new TutorDto() { TutorName = tutor.TutorName, StudentNumber = tutor.StudentNumber, AvailabilitySlots = tutor.AvailabilitySlots };
+        return Ok(tutorDto);
     }
     [HttpPost]
-    public IActionResult Create([FromBody] AddTutorRequest addTutorRequest)
+    public IActionResult CreateTutor([FromBody] AddTutorRequest addTutorRequest)
     {
-        Tutor tutor = new Tutor() { Id = Guid.NewGuid(), TutorName = addTutorRequest.TutorName};
+        Tutor tutor = new Tutor() 
+        { 
+            Id = Guid.NewGuid(),
+            StudentNumber = addTutorRequest.StudentNumber, 
+            TutorName = addTutorRequest.TutorName
+        };
         
         _tutorRepository.Add(tutor);
+        _unitOfWork.SaveChanges();
         return Ok(tutor);
     }
 }

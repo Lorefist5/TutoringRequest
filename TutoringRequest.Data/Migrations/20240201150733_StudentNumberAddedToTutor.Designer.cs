@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TutoringRequest.Data;
 
@@ -10,9 +11,11 @@ using TutoringRequest.Data;
 namespace TutoringRequest.Data.Migrations
 {
     [DbContext(typeof(TutoringDbContext))]
-    partial class TutoringDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240201150733_StudentNumberAddedToTutor")]
+    partial class StudentNumberAddedToTutor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.1");
@@ -27,13 +30,13 @@ namespace TutoringRequest.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("EndTime")
+                    b.Property<TimeSpan>("EndTime")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("StartTime")
+                    b.Property<TimeSpan>("StartTime")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("TutorId")
+                    b.Property<Guid?>("TutorId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -133,10 +136,10 @@ namespace TutoringRequest.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("EndTime")
+                    b.Property<TimeSpan>("EndTime")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("StartTime")
+                    b.Property<TimeSpan>("StartTime")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("StudentId")
@@ -158,13 +161,9 @@ namespace TutoringRequest.Data.Migrations
 
             modelBuilder.Entity("TutoringRequest.Models.Domain.AvailabilitySlot", b =>
                 {
-                    b.HasOne("TutoringRequest.Models.Domain.Tutor", "Tutor")
+                    b.HasOne("TutoringRequest.Models.Domain.Tutor", null)
                         .WithMany("AvailabilitySlots")
-                        .HasForeignKey("TutorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Tutor");
+                        .HasForeignKey("TutorId");
                 });
 
             modelBuilder.Entity("TutoringRequest.Models.Domain.Course", b =>

@@ -2,8 +2,9 @@
 
 namespace TutoringRequest.Models.DTO.Tutors;
 
-public class AddTutorRequest
+public class TutorDto
 {
-    public string TutorName { get; set; } = default!;
     public string StudentNumber { get; set; } = default!;
+    public string TutorName { get; set; } = default!;
+    public List<Domain.AvailabilitySlot> AvailabilitySlots { get; set; }
 }

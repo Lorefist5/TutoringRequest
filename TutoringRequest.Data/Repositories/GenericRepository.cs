@@ -24,12 +24,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         await _entities.AddAsync(entity);
     }
 
-    public T? FirstOrDefault(Expression<Func<T, bool>> predicate)
+    public virtual T? FirstOrDefault(Expression<Func<T, bool>> predicate)
     {
         return _entities.FirstOrDefault(predicate);
     }
 
-    public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
+    public virtual async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate)
     {
         return await _entities.FirstOrDefaultAsync(predicate);
     }

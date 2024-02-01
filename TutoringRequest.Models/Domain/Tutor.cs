@@ -3,6 +3,7 @@ namespace TutoringRequest.Models.Domain;
 
 public class Tutor : BaseEntity
 {
+    public string StudentNumber { get; set; } = default!;
     public string TutorName { get; set; } = default!;
     public List<Course> Courses { get; set; }
     public List<TutoringSection> TutoringSections { get; set; }
