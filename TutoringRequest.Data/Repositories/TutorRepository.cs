@@ -9,7 +9,7 @@ public class TutorRepository : GenericRepository<Tutor>, ITutorRepository
 {
     public TutorRepository(TutoringDbContext context) : base(context)
     {
-        _entities.Include(e => e.AvailabilitySlots);
+        
 
     }
     public List<Course> GetTutorCourses(Tutor tutor)
@@ -20,7 +20,10 @@ public class TutorRepository : GenericRepository<Tutor>, ITutorRepository
     {
         return tutor.TutoringSections;
     }
-
+    public override IEnumerable<Tutor> GetAll()
+    {
+        return _entities.Include(t => t.AvailabilitySlots);
+    }
     public override Tutor? FirstOrDefault(Expression<Func<Tutor, bool>> predicate)
     {
         return _entities.Include(t => t.AvailabilitySlots).FirstOrDefault(predicate);

@@ -45,5 +45,25 @@ public class TutorAvailabilitySlotController : ControllerBase
 
         return Created();
     }
+    [HttpPost("ByTutorStudentNumber/{studentNumber}")]
+    public IActionResult CreateTutorSlotByStudentNumber(string studentNumber,[FromBody] AddAvailabilitySlotRequest availabilitySlotDto)
+    {
+        Tutor? tutor = _unitOfWork.TutorRepository.FirstOrDefault(t => t.StudentNumber == studentNumber);
+        if (tutor == null) return NotFound();
 
+        AvailabilitySlot availabilitySlotDomain = new AvailabilitySlot()
+        {
+            Day = availabilitySlotDto.Day,
+            EndTime = availabilitySlotDto.EndTime,
+            Id = Guid.NewGuid(),
+            StartTime = availabilitySlotDto.StartTime,
+            TutorId = tutor.Id,
+            Tutor = tutor
+        };
+        _unitOfWork.AvailabilitySlotRepository.Add(availabilitySlotDomain);
+        _unitOfWork.SaveChanges();
+
+
+        return Created();
+    }
 }

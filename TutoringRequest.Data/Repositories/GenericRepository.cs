@@ -14,12 +14,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         this._context = context;
         _entities = context.Set<T>();
     }
-    public void Add(T entity)
+    public virtual void Add(T entity)
     {
         _entities.Add(entity);
     }
 
-    public async Task AddAsync(T entity)
+    public virtual async Task AddAsync(T entity)
     {
         await _entities.AddAsync(entity);
     }
@@ -34,17 +34,17 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         return await _entities.FirstOrDefaultAsync(predicate);
     }
 
-    public IEnumerable<T> GetAll()
+    public virtual IEnumerable<T> GetAll()
     {
         return _entities.ToList();
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync()
+    public virtual async Task<IEnumerable<T>> GetAllAsync()
     {
         return await _entities.ToListAsync();
     }
 
-    public void Remove(T entity)
+    public virtual void Remove(T entity)
     {
         var newEntity = _entities.FirstOrDefault(e => e.Id == entity.Id);
         if(newEntity != null)
@@ -53,7 +53,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         }
     }
 
-    public async Task RemoveAsync(T entity)
+    public virtual async Task RemoveAsync(T entity)
     {
         var newEntity = await _entities.FirstOrDefaultAsync(e => e.Id == entity.Id);
         if(newEntity != null)
@@ -62,9 +62,9 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         }
     }
 
-    public IEnumerable<T> Where(Expression<Func<T, bool>> predicate) => _entities.Where(predicate);
+    public virtual IEnumerable<T> Where(Expression<Func<T, bool>> predicate) => _entities.Where(predicate);
     
 
-    public Task<List<T>> WhereAsync(Expression<Func<T, bool>> predicate) => _entities.Where(predicate).ToListAsync();
+    public virtual Task<List<T>> WhereAsync(Expression<Func<T, bool>> predicate) => _entities.Where(predicate).ToListAsync();
     
 }
