@@ -19,51 +19,34 @@ public class TutorController : ControllerBase
         this._unitOfWork = unitOfWork;
     }
     [HttpGet]
-    public IActionResult GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        List<TutorDto> tutorsDto = new List<TutorDto>();
-        foreach(Tutor tutor in _unitOfWork.TutorRepository.GetAll())
-        {
-
-            tutorsDto.Add(new TutorDto()
+        var tutorsDto = (await _unitOfWork.TutorRepository.GetAllAsync())
+            .Select(tutor => new TutorDto
             {
+                Id = tutor.Id,
                 TutorName = tutor.TutorName,
-                StudentNumber = tutor.StudentNumber,
-                AvailabilitySlots = tutor.AvailabilitySlots.ConvertAll(
-                a => new AvailabilityDto()
-                {
-                    Day = a.Day,
-                    EndTime = a.EndTime,
-                    StartTime = a.StartTime,
-                    TutorId = a.TutorId
-                })
-            });
-        }
-        return Ok(tutorsDto); //Status code of 200
+                StudentNumber = tutor.StudentNumber
+            }).ToList();
+
+        return Ok(tutorsDto);
+
     }
     [HttpGet("{id:guid}")]
-    public IActionResult GetTutor( Guid id)
+    public async Task<IActionResult> GetTutor(Guid id)
     {
-        Tutor? tutor = _unitOfWork.TutorRepository.FirstOrDefault(t => t.Id == id);
+        Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(t => t.Id == id);
         if (tutor == null) return NotFound();
         TutorDto tutorDto = new TutorDto() 
         { 
             TutorName = tutor.TutorName, 
             StudentNumber = tutor.StudentNumber,
-            AvailabilitySlots = tutor.AvailabilitySlots.ConvertAll(
-                a => new AvailabilityDto()
-                {
-                    Day = a.Day,
-                    EndTime = a.EndTime,
-                    StartTime = a.StartTime,
-                    TutorId = a.TutorId
-                })
         };
         return Ok(tutorDto);
     }
 
     [HttpPost]
-    public IActionResult CreateTutor([FromBody] AddTutorRequest addTutorRequest)
+    public async Task<IActionResult> CreateTutor([FromBody] AddTutorRequest addTutorRequest)
     {
         Tutor tutor = new Tutor() 
         { 
@@ -72,9 +55,9 @@ public class TutorController : ControllerBase
             TutorName = addTutorRequest.TutorName
         };
         
-        _unitOfWork.TutorRepository.Add(tutor);
-        _unitOfWork.SaveChanges();
-        return Ok(tutor);
+        await _unitOfWork.TutorRepository.AddAsync(tutor);
+        await _unitOfWork.SaveChangesAsync();
+        return Created();
     }
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteTutor(Guid id)
@@ -85,35 +68,47 @@ public class TutorController : ControllerBase
         await _unitOfWork.SaveChangesAsync();
         return Ok();
     }
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> UpdateTutor(Guid id,[FromBody] UpdateTutorRequest updateTutorRequest)
+    {
+        Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(t => t.Id == id);
+        if (tutor == null) return NotFound();
+        tutor.TutorName = updateTutorRequest.TutorName;
+        tutor.StudentNumber = updateTutorRequest.StudentNumber;
+        await _unitOfWork.SaveChangesAsync();
+        return Ok(updateTutorRequest);
+    }
     //ByStudentNumber
     [HttpGet("ByStudentNumber/{studentNumber}")]
-    public IActionResult GetTutorByName(string studentNumber)
+    public async Task<IActionResult> GetTutorByName(string studentNumber)
     {
-        Tutor? tutor = _unitOfWork.TutorRepository.FirstOrDefault(t => t.StudentNumber == studentNumber);
+        Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(t => t.StudentNumber == studentNumber);
         if (tutor == null) return NotFound();
 
         TutorDto tutorDto = new TutorDto()
         {
             TutorName = tutor.TutorName,
             StudentNumber = tutor.StudentNumber,
-            AvailabilitySlots = tutor.AvailabilitySlots.ConvertAll(
-                a => new AvailabilityDto()
-                {
-                    Day = a.Day,
-                    EndTime = a.EndTime,
-                    StartTime = a.StartTime,
-                    TutorId = a.TutorId
-                })
         };
         return Ok(tutorDto);
     }
     [HttpDelete("ByStudentNumber/{studentNumber}")]
-    public async Task<IActionResult> DeleteTutorById(string studentNumber)
+    public async Task<IActionResult> DeleteTutorByStudentNumber(string studentNumber)
     {
         Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(t => t.StudentNumber == studentNumber);
         if (tutor == null) return NotFound();
         await _unitOfWork.TutorRepository.RemoveAsync(tutor);
         await _unitOfWork.SaveChangesAsync();
         return Ok();
+    }
+    [HttpPut("ByStudentNumber/{studentNumber}")]
+    public async Task<IActionResult> UpdateTutorByStudentName(string studentNumber, [FromBody] UpdateTutorRequest updateTutorRequest)
+    {
+        Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(t => t.StudentNumber == studentNumber);
+        if (tutor == null) return NotFound();
+        tutor.TutorName = updateTutorRequest.TutorName;
+        tutor.StudentNumber = updateTutorRequest.StudentNumber;
+        await _unitOfWork.SaveChangesAsync();
+        return Ok(updateTutorRequest);
     }
 }

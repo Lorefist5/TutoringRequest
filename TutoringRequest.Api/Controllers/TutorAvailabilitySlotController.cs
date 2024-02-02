@@ -17,17 +17,17 @@ public class TutorAvailabilitySlotController : ControllerBase
         this._unitOfWork = unitOfWork;
     }
     [HttpGet]
-    public IActionResult GetTutorSlots(Guid tutorId)
+    public async Task<IActionResult> GetTutorSlots(Guid tutorId)
     {
-        Tutor? tutor = _unitOfWork.TutorRepository.FirstOrDefault(t => t.Id == tutorId);
+        Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(t => t.Id == tutorId);
         if(tutor == null) return NotFound();
 
         return Ok(tutor.AvailabilitySlots);
     }
     [HttpPost]
-    public IActionResult CreateTutorSlot([FromHeader] Guid tutorId, [FromBody] AddAvailabilitySlotRequest availabilitySlotDto)
+    public async Task<IActionResult> CreateTutorSlot([FromHeader] Guid tutorId, [FromBody] AddAvailabilitySlotRequest availabilitySlotDto)
     {
-        Tutor? tutor = _unitOfWork.TutorRepository.FirstOrDefault(t => t.Id == tutorId);
+        Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(t => t.Id == tutorId);
         if (tutor == null) return NotFound();
 
         AvailabilitySlot availabilitySlotDomain = new AvailabilitySlot()
@@ -45,10 +45,19 @@ public class TutorAvailabilitySlotController : ControllerBase
 
         return Created();
     }
-    [HttpPost("ByTutorStudentNumber/{studentNumber}")]
-    public IActionResult CreateTutorSlotByStudentNumber(string studentNumber,[FromBody] AddAvailabilitySlotRequest availabilitySlotDto)
+    //ByTutorStudentNumber
+    [HttpGet("ByTutorStudentNumber/{studentNumber}")]
+    public async Task<IActionResult> GetTutorSlotsByStudentNumber(string studentNumber)
     {
-        Tutor? tutor = _unitOfWork.TutorRepository.FirstOrDefault(t => t.StudentNumber == studentNumber);
+        Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(t => t.StudentNumber == studentNumber);
+        if (tutor == null) return NotFound();
+
+        return Ok(tutor.AvailabilitySlots);
+    }
+    [HttpPost("ByTutorStudentNumber/{studentNumber}")]
+    public async Task<IActionResult> CreateTutorSlotByStudentNumber(string studentNumber,[FromBody] AddAvailabilitySlotRequest availabilitySlotDto)
+    {
+        Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(t => t.StudentNumber == studentNumber);
         if (tutor == null) return NotFound();
 
         AvailabilitySlot availabilitySlotDomain = new AvailabilitySlot()
@@ -60,10 +69,11 @@ public class TutorAvailabilitySlotController : ControllerBase
             TutorId = tutor.Id,
             Tutor = tutor
         };
-        _unitOfWork.AvailabilitySlotRepository.Add(availabilitySlotDomain);
-        _unitOfWork.SaveChanges();
+        await _unitOfWork.AvailabilitySlotRepository.AddAsync(availabilitySlotDomain);
+        await _unitOfWork.SaveChangesAsync();
 
 
         return Created();
     }
+
 }
