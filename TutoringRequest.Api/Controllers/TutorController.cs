@@ -79,7 +79,7 @@ public class TutorController : ControllerBase
         return Ok(updateTutorRequest);
     }
     //ByStudentNumber
-    [HttpGet("ByStudentNumber/{studentNumber}")]
+    [HttpGet("ByTutorStudentNumber/{studentNumber}")]
     public async Task<IActionResult> GetTutorByName(string studentNumber)
     {
         Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(t => t.StudentNumber == studentNumber);
@@ -92,7 +92,7 @@ public class TutorController : ControllerBase
         };
         return Ok(tutorDto);
     }
-    [HttpDelete("ByStudentNumber/{studentNumber}")]
+    [HttpDelete("ByTutorStudentNumber/{studentNumber}")]
     public async Task<IActionResult> DeleteTutorByStudentNumber(string studentNumber)
     {
         Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(t => t.StudentNumber == studentNumber);
@@ -101,7 +101,7 @@ public class TutorController : ControllerBase
         await _unitOfWork.SaveChangesAsync();
         return Ok();
     }
-    [HttpPut("ByStudentNumber/{studentNumber}")]
+    [HttpPut("ByTutorStudentNumber/{studentNumber}")]
     public async Task<IActionResult> UpdateTutorByStudentName(string studentNumber, [FromBody] UpdateTutorRequest updateTutorRequest)
     {
         Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(t => t.StudentNumber == studentNumber);
