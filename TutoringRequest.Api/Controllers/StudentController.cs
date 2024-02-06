@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
 using TutoringRequest.Data;
 using TutoringRequest.Data.Repositories.Interfaces;
 using TutoringRequest.Models.Domain;
@@ -26,13 +27,9 @@ public class StudentController : ControllerBase
         return Ok(studentDtos);
     }
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetStudent(Guid id)
+    public async Task<IActionResult> GetStudentById(Guid id)
     {
-        Student? studentDomain = await _unitOfWork.StudentRepository.FirstOrDefaultAsync(s => s.Id == id);
-        if (studentDomain == null) return NotFound();
-        var studentDto = new StudentDto() {Id = studentDomain.Id ,Name = studentDomain.Name, StudentNumber = studentDomain.StudentNumber};
-
-        return Ok(studentDto);
+        return await GetStudent(s => s.Id == id);
     }
     [HttpPost]
     public async Task<ActionResult<StudentDto>> CreateStudent([FromBody] AddStudentRequest addStudentRequest)
@@ -44,40 +41,42 @@ public class StudentController : ControllerBase
         return CreatedAtAction(nameof(GetStudent), new { id = student.Id }, new StudentDto { Id = student.Id, Name = student.Name, StudentNumber = student.StudentNumber });
     }
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateStudent(Guid id, [FromBody] UpdateStudentRequest updateStudentRequest)
+    public async Task<IActionResult> UpdateStudentById(Guid id, [FromBody] UpdateStudentRequest updateStudentRequest)
     {
-        Student? studentDomain = await _unitOfWork.StudentRepository.FirstOrDefaultAsync(s => s.Id == id);
-        if (studentDomain == null) return NotFound();
-        studentDomain.Name = updateStudentRequest.Name;
-        studentDomain.StudentNumber = updateStudentRequest.StudentNumber;
-
-        await _unitOfWork.SaveChangesAsync();
-        return Ok(updateStudentRequest);
+        return await UpdateStudent(s => s.Id == id, updateStudentRequest);
     }
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteStudent(Guid id)
+    public async Task<IActionResult> DeleteStudentById(Guid id)
     {
-        Student? studentDomain = await _unitOfWork.StudentRepository.FirstOrDefaultAsync(s => s.Id == id);
-        if (studentDomain == null) return NotFound();
-        _unitOfWork.StudentRepository.Remove(studentDomain);
-        await _unitOfWork.SaveChangesAsync();
-
-        return Ok();
+        return await DeleteStudent(s => s.Id == id);
     }
     //ByStudentNumber
     [HttpGet("ByStudentNumber/{studentNumber}")]
     public async Task<IActionResult> GetStudentByStudentNumber(string studentNumber)
     {
-        Student? studentDomain = await _unitOfWork.StudentRepository.FirstOrDefaultAsync(s => s.StudentNumber == studentNumber);
+        return await GetStudent(s => s.StudentNumber == studentNumber);
+    }
+    [HttpPut("ByStudentNumber/{studentNumber}")]
+    public async Task<IActionResult> UpdateStudentByStudentNumber(string studentNumber, [FromBody] UpdateStudentRequest updateStudentRequest)
+    {
+        return await UpdateStudent(s => s.StudentNumber == studentNumber, updateStudentRequest);
+    }
+    [HttpDelete("ByStudentNumber/{studentNumber}")]
+    public async Task<IActionResult> DeleteStudentByStudentNumber(string studentNumber)
+    {
+        return await DeleteStudent(s => s.StudentNumber == studentNumber);
+    }   
+    private async Task<IActionResult> GetStudent(Expression<Func<Student, bool>> predicate)
+    {
+        Student? studentDomain = await _unitOfWork.StudentRepository.FirstOrDefaultAsync(predicate);
         if (studentDomain == null) return NotFound();
         var studentDto = new StudentDto() { Id = studentDomain.Id, Name = studentDomain.Name, StudentNumber = studentDomain.StudentNumber };
 
         return Ok(studentDto);
     }
-    [HttpPut("ByStudentNumber/{studentNumber}")]
-    public async Task<IActionResult> UpdateStudentByStudentNumber(string studentNumber, [FromBody] UpdateStudentRequest updateStudentRequest)
+    private async Task<IActionResult> UpdateStudent(Expression<Func<Student, bool>> predicate, UpdateStudentRequest updateStudentRequest)
     {
-        Student? studentDomain = await _unitOfWork.StudentRepository.FirstOrDefaultAsync(s => s.StudentNumber == studentNumber);
+        Student? studentDomain = await _unitOfWork.StudentRepository.FirstOrDefaultAsync(predicate);
         if (studentDomain == null) return NotFound();
         studentDomain.Name = updateStudentRequest.Name;
         studentDomain.StudentNumber = updateStudentRequest.StudentNumber;
@@ -85,10 +84,9 @@ public class StudentController : ControllerBase
         await _unitOfWork.SaveChangesAsync();
         return Ok(updateStudentRequest);
     }
-    [HttpDelete("ByStudentNumber/{studentNumber}")]
-    public async Task<IActionResult> DeleteStudentByStudentNumber(string studentNumber)
+    private async Task<IActionResult> DeleteStudent(Expression<Func<Student, bool>> predicate)
     {
-        Student? studentDomain = await _unitOfWork.StudentRepository.FirstOrDefaultAsync(s => s.StudentNumber == studentNumber);
+        Student? studentDomain = await _unitOfWork.StudentRepository.FirstOrDefaultAsync(predicate);
         if (studentDomain == null) return NotFound();
         _unitOfWork.StudentRepository.Remove(studentDomain);
         await _unitOfWork.SaveChangesAsync();

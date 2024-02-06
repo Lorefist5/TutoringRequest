@@ -6,7 +6,7 @@ public class AvailabilityDto
 {
     public Guid Id { get; set; }
     public Guid TutorId { get; set; }
-    public DateTime Day { get; set; }
-    public DateTime StartTime { get; set; }
-    public DateTime EndTime { get; set; }
+    public string Day { get; set; }
+    public TimeSpan StartTime { get; set; }
+    public TimeSpan EndTime { get; set; }
 }

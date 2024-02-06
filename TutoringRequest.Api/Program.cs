@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using TutoringRequest.Api.Mapping;
 using TutoringRequest.Data;
 using TutoringRequest.Data.Repositories;
 using TutoringRequest.Data.Repositories.Interfaces;
@@ -14,7 +16,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddAutoMapper(typeof(AutoMappingProfiles));
 builder.Services.AddDbContext<TutoringDbContext>(options =>
 {
     options.UseSqlite(builder.Configuration.GetConnectionString("Test"));

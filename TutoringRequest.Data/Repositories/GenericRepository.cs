@@ -66,5 +66,20 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
     
 
     public virtual Task<List<T>> WhereAsync(Expression<Func<T, bool>> predicate) => _entities.Where(predicate).ToListAsync();
-    
+    public virtual async Task<T?> UpdateAsync(Guid id, T newValues)
+    {
+        T? existingEntity = await _entities.FirstOrDefaultAsync(e => e.Id == id);
+        if(existingEntity == null) return null;
+        newValues.Id = id;
+        _entities.Update(newValues);
+        return existingEntity;
+    }
+    public virtual T? Update(Guid id, T newValues)
+    {
+        T? existingEntity = _entities.FirstOrDefault(e => e.Id == id);
+        if (existingEntity == null) return null;
+        newValues.Id = id;
+        _entities.Update(newValues);
+        return existingEntity;
+    }
 }

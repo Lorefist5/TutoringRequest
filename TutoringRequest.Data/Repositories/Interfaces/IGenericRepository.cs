@@ -14,4 +14,6 @@ public interface IGenericRepository<T> where T : BaseEntity
     public Task RemoveAsync(T entity);
     public Task<IEnumerable<T>> GetAllAsync();
     public IEnumerable<T> GetAll();
+    public T? Update(Guid id, T newValues);
+    public Task<T?> UpdateAsync(Guid id, T newValues);  
 }

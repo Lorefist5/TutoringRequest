@@ -10,7 +10,12 @@ public class AvailabilitySlotRepository : GenericRepository<AvailabilitySlot>, I
     {
     }
 
-    public async Task<List<AvailabilitySlot>> GetTutorAvailabilitySlots(Tutor tutor)
+    public List<AvailabilitySlot> GetTutorAvailabilitySlots(Tutor tutor)
+    {
+        return _entities.Where(a => a.TutorId == tutor.Id).ToList();
+    }
+
+    public async Task<List<AvailabilitySlot>> GetTutorAvailabilitySlotsAsync(Tutor tutor)
     {
         return await _entities.Where(a => a.TutorId == tutor.Id).ToListAsync();
     }

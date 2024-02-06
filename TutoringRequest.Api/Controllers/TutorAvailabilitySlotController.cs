@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Linq.Expressions;
 using TutoringRequest.Data.Repositories.Interfaces;
 using TutoringRequest.Models.Domain;
 using TutoringRequest.Models.DTO.AvailabilitySlot;
+using TutoringRequest.Models.Enums;
 
 namespace TutoringRequest.Api.Controllers;
 
@@ -11,128 +15,109 @@ namespace TutoringRequest.Api.Controllers;
 public class TutorAvailabilitySlotController : ControllerBase
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
-    public TutorAvailabilitySlotController(IUnitOfWork unitOfWork)
+    public TutorAvailabilitySlotController(IUnitOfWork unitOfWork, IMapper mapper)
     {
         this._unitOfWork = unitOfWork;
+        this._mapper = mapper;
     }
     [HttpGet]
-    public async Task<IActionResult> GetTutorSlots(Guid tutorId)
+    public async Task<IActionResult> GetTutorSlotsById(Guid tutorId)
     {
-        Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(t => t.Id == tutorId);
-        var w = tutor.AvailabilitySlots;
-        if(tutor == null) return NotFound();
-        List<AvailabilitySlot> slotsDomain = await _unitOfWork.AvailabilitySlotRepository.GetTutorAvailabilitySlots(tutor);
-        List<AvailabilityDto> slotsDto = slotsDomain.ConvertAll(slot => new AvailabilityDto()
-        {
-            Id = slot.Id,
-            Day = slot.Day,
-            StartTime = slot.StartTime,
-            EndTime = slot.EndTime,
-        });
-        return Ok(slotsDto);
+        return await GetSlots(t => t.Id == tutorId);
     }
     [HttpPost]
-    public async Task<IActionResult> CreateTutorSlot([FromHeader] Guid tutorId, [FromBody] AddAvailabilitySlotRequest availabilitySlotDto)
+    public async Task<IActionResult> CreateTutorSlotById([FromHeader] Guid tutorId, [FromBody] AddAvailabilitySlotRequest addAvailabilitySlotRequest)
     {
-        Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(t => t.Id == tutorId);
-        if (tutor == null) return NotFound();
-
-        AvailabilitySlot availabilitySlotDomain = new AvailabilitySlot()
-        {
-            Day = availabilitySlotDto.Day,
-            EndTime = availabilitySlotDto.EndTime,
-            Id = Guid.NewGuid(),
-            StartTime = availabilitySlotDto.StartTime,
-            TutorId = tutorId,
-            Tutor = tutor
-        };
-        await _unitOfWork.AvailabilitySlotRepository.AddAsync(availabilitySlotDomain);
-        await _unitOfWork.SaveChangesAsync();
-        
-
-        return Created();
+        return await CreateSlot(t => t.Id == tutorId, addAvailabilitySlotRequest);
     }
-    [HttpDelete]
-    public async Task<IActionResult> DeleteTutorSlot(Guid tutorId, Guid slotId)
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> DeleteTutorSlotById(Guid id)
     {
-        Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(t => t.Id == tutorId);
-        AvailabilitySlot? slot = await _unitOfWork.AvailabilitySlotRepository.FirstOrDefaultAsync(s => s.Id == slotId);
-        if (tutor == null || slot == null) return NotFound();
-
-        await _unitOfWork.AvailabilitySlotRepository.RemoveAsync(slot);
-        await _unitOfWork.SaveChangesAsync();
-
-        return Ok();
+        return await DeleteSlot(s => s.Id == id);
     }
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateTutorSlot(Guid id, UpdateAvailabilitySlotRequest updateAvailabilitySlotRequest)
+    public async Task<IActionResult> UpdateSlotById(Guid id, [FromBody] UpdateAvailabilitySlotRequest updateAvailabilitySlotRequest)
     {
-        Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(t => t.Id == id);
-        if (tutor == null) return NotFound();
-        AvailabilitySlot? slot = tutor.AvailabilitySlots.FirstOrDefault(a => a.Id == updateAvailabilitySlotRequest.Id);
-        if(slot == null) return NotFound(); 
-        slot.Day = updateAvailabilitySlotRequest.Day;
-        slot.StartTime = updateAvailabilitySlotRequest.StartTime;
-        slot.EndTime = updateAvailabilitySlotRequest.EndTime;
-         
-        await _unitOfWork.SaveChangesAsync();
-        return Ok();
+        return await UpdateSlot(s => s.Id == id, updateAvailabilitySlotRequest);
     }
     //ByTutorStudentNumber
     [HttpGet("ByTutorStudentNumber/{studentNumber}")]
     public async Task<IActionResult> GetTutorSlotsByStudentNumber(string studentNumber)
     {
-        Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(t => t.StudentNumber == studentNumber);
-        if (tutor == null) return NotFound();
-
-        return Ok(tutor.AvailabilitySlots);
+        return await GetSlots(t => t.StudentNumber == studentNumber);
     }
     [HttpPost("ByTutorStudentNumber/{studentNumber}")]
-    public async Task<IActionResult> CreateTutorSlotByStudentNumber(string studentNumber,[FromBody] AddAvailabilitySlotRequest availabilitySlotDto)
+    public async Task<IActionResult> CreateTutorSlotByStudentNumber(string studentNumber, [FromBody] AddAvailabilitySlotRequest addAvailabilitySlotRequest)
     {
-        Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(t => t.StudentNumber == studentNumber);
-        if (tutor == null) return NotFound();
-
-        AvailabilitySlot availabilitySlotDomain = new AvailabilitySlot()
-        {
-            Day = availabilitySlotDto.Day,
-            EndTime = availabilitySlotDto.EndTime,
-            Id = Guid.NewGuid(),
-            StartTime = availabilitySlotDto.StartTime,
-            TutorId = tutor.Id,
-            Tutor = tutor
-        };
-        await _unitOfWork.AvailabilitySlotRepository.AddAsync(availabilitySlotDomain);
-        await _unitOfWork.SaveChangesAsync();
-
-
-        return Created();
+        return await CreateSlot(t => t.StudentNumber == studentNumber, addAvailabilitySlotRequest);
     }
-    [HttpDelete("ByTutorStudentNumber/{studentNumber}")]
-    public async Task<IActionResult> DeleteTutorSlotByStudentNumber(string studentNumber, Guid slotId)
+    private async Task<IActionResult> CreateSlot(Expression<Func<Tutor, bool>> predicate, AddAvailabilitySlotRequest addAvailabilitySlotRequest)
     {
-        Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(t => t.StudentNumber == studentNumber);
-        AvailabilitySlot? slot = await _unitOfWork.AvailabilitySlotRepository.FirstOrDefaultAsync(s => s.Id == slotId);
-        if (tutor == null || slot == null) return NotFound();
+        if (ModelState.IsValid)
+        {
+            Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(predicate);
+            if (tutor == null) return NotFound();
 
+            // Check for slot overlap before creating a new slot
+            if (CheckForSlotOverlap(tutor.Id, addAvailabilitySlotRequest.Day, addAvailabilitySlotRequest.StartTime, addAvailabilitySlotRequest.EndTime, Guid.Empty))
+            {
+                return Conflict("The new slot overlaps with an existing slot.");
+            }
+
+            AvailabilitySlot availabilitySlotDomain = _mapper.Map<AvailabilitySlot>(addAvailabilitySlotRequest);
+            availabilitySlotDomain.Tutor = tutor;
+            await _unitOfWork.AvailabilitySlotRepository.AddAsync(availabilitySlotDomain);
+            await _unitOfWork.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetTutorSlotsById), new { tutorId = tutor.Id }, addAvailabilitySlotRequest);
+        }
+        else
+        {
+            return BadRequest(ModelState);
+        }
+    }
+
+    private async Task<IActionResult> GetSlots(Expression<Func<Tutor, bool>> predicate)
+    {
+        Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(predicate);
+
+        if (tutor == null) return NotFound();
+        List<AvailabilityDto> availabilityDtos = _mapper.Map<List<AvailabilityDto>>(await _unitOfWork.AvailabilitySlotRepository
+            .GetTutorAvailabilitySlotsAsync(tutor));
+
+        return Ok(availabilityDtos);
+    }
+    private async Task<IActionResult> DeleteSlot(Expression<Func<AvailabilitySlot, bool>> slotExpression)
+    {
+        
+        AvailabilitySlot? slot = await _unitOfWork.AvailabilitySlotRepository.FirstOrDefaultAsync(slotExpression);
+        if(slot == null) return NotFound();
         await _unitOfWork.AvailabilitySlotRepository.RemoveAsync(slot);
         await _unitOfWork.SaveChangesAsync();
 
         return Ok();
     }
-    [HttpPut("ByTutorStudentNumber/{studentNumber}")]
-    public async Task<IActionResult> UpdateTutorSlotByStudentNumber(string studentNumber, UpdateAvailabilitySlotRequest updateAvailabilitySlotRequest)
+    private async Task<IActionResult> UpdateSlot(Expression<Func<AvailabilitySlot, bool>> slotExpression, UpdateAvailabilitySlotRequest updateAvailabilitySlotRequest)
     {
-        Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(t => t.StudentNumber == studentNumber);
-        if (tutor == null) return NotFound();
-        AvailabilitySlot? slot = tutor.AvailabilitySlots.FirstOrDefault(a => a.Id == updateAvailabilitySlotRequest.Id);
+        AvailabilitySlot? slot = await _unitOfWork.AvailabilitySlotRepository.FirstOrDefaultAsync(slotExpression);
         if (slot == null) return NotFound();
+        
         slot.Day = updateAvailabilitySlotRequest.Day;
         slot.StartTime = updateAvailabilitySlotRequest.StartTime;
         slot.EndTime = updateAvailabilitySlotRequest.EndTime;
-
         await _unitOfWork.SaveChangesAsync();
         return Ok();
+    }
+    private bool CheckForSlotOverlap(Guid tutorId, DayOfWeek day, TimeSpan newStartTime, TimeSpan newEndTime, Guid excludedSlotId)
+    {
+        // Check for slots that overlap with the new slot
+        var overlappingSlots = _unitOfWork.AvailabilitySlotRepository.GetAll();
+
+        foreach(var overlappingSlot in overlappingSlots) { }
+
+        // Return true if there are any overlapping slots
+        return overlappingSlots.Any();
     }
 }

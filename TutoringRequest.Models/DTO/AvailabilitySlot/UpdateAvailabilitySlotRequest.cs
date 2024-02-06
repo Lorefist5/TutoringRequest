@@ -2,8 +2,7 @@
 
 public class UpdateAvailabilitySlotRequest
 {
-    public Guid Id { get; set; }
-    public DateTime Day { get; set; }
-    public DateTime StartTime { get; set; }
-    public DateTime EndTime { get; set; }
+    public DayOfWeek Day { get; set; }
+    public TimeSpan StartTime { get; set; }
+    public TimeSpan EndTime { get; set; }
 }

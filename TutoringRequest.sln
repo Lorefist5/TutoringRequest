@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TutoringRequest.Data", "TutoringRequest.Data\TutoringRequest.Data.csproj", "{CE953436-9EC7-49DE-96F3-8EAD31022504}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TutoringRequest.Data", "TutoringRequest.Data\TutoringRequest.Data.csproj", "{CE953436-9EC7-49DE-96F3-8EAD31022504}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TutoringRequest.Models", "TutoringRequest.Models\TutoringRequest.Models.csproj", "{96D5057D-6DFA-493D-BBB9-B4F2C37425DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TutoringRequest.Models", "TutoringRequest.Models\TutoringRequest.Models.csproj", "{96D5057D-6DFA-493D-BBB9-B4F2C37425DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TutoringRequest.Api", "TutoringRequest.Api\TutoringRequest.Api.csproj", "{9CB38EB6-7F78-4204-AB28-64F6FDA41B68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TutoringRequest.Api", "TutoringRequest.Api\TutoringRequest.Api.csproj", "{9CB38EB6-7F78-4204-AB28-64F6FDA41B68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TutoringRequest.Test", "TutoringRequest.Test\TutoringRequest.Test.csproj", "{FEC01092-275E-4977-8F02-07197499F61C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{9CB38EB6-7F78-4204-AB28-64F6FDA41B68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9CB38EB6-7F78-4204-AB28-64F6FDA41B68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9CB38EB6-7F78-4204-AB28-64F6FDA41B68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEC01092-275E-4977-8F02-07197499F61C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEC01092-275E-4977-8F02-07197499F61C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEC01092-275E-4977-8F02-07197499F61C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEC01092-275E-4977-8F02-07197499F61C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

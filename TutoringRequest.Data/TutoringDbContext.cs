@@ -21,8 +21,9 @@ public class TutoringDbContext : DbContext
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<AvailabilitySlot>()
-            .Property(e => e.Day)
-            .HasConversion<string>();
+
+        modelBuilder.Entity<Student>()
+            .HasIndex(s => s.StudentNumber)
+            .IsUnique();
     }
 }
