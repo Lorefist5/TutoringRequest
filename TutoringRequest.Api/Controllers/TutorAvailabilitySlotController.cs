@@ -23,7 +23,7 @@ public class TutorAvailabilitySlotController : ControllerBase
         this._mapper = mapper;
     }
     [HttpGet]
-    public async Task<IActionResult> GetTutorSlotsById(Guid tutorId)
+    public async Task<ActionResult<List<AvailabilityDto>>> GetTutorSlotsById(Guid tutorId)
     {
         return await GetSlots(t => t.Id == tutorId);
     }
@@ -44,7 +44,7 @@ public class TutorAvailabilitySlotController : ControllerBase
     }
     //ByTutorStudentNumber
     [HttpGet("ByTutorStudentNumber/{studentNumber}")]
-    public async Task<IActionResult> GetTutorSlotsByStudentNumber(string studentNumber)
+    public async Task<ActionResult<List<AvailabilityDto>>> GetTutorSlotsByStudentNumber(string studentNumber)
     {
         return await GetSlots(t => t.StudentNumber == studentNumber);
     }
@@ -60,14 +60,15 @@ public class TutorAvailabilitySlotController : ControllerBase
             Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(predicate);
             if (tutor == null) return NotFound();
 
+            AvailabilitySlot availabilitySlotDomain = _mapper.Map<AvailabilitySlot>(addAvailabilitySlotRequest);
+            availabilitySlotDomain.Tutor = tutor;
             // Check for slot overlap before creating a new slot
-            if (CheckForSlotOverlap(tutor.Id, addAvailabilitySlotRequest.Day, addAvailabilitySlotRequest.StartTime, addAvailabilitySlotRequest.EndTime, Guid.Empty))
+            if (await CheckForSlotOverlap(tutor,availabilitySlotDomain))
             {
                 return Conflict("The new slot overlaps with an existing slot.");
             }
 
-            AvailabilitySlot availabilitySlotDomain = _mapper.Map<AvailabilitySlot>(addAvailabilitySlotRequest);
-            availabilitySlotDomain.Tutor = tutor;
+
             await _unitOfWork.AvailabilitySlotRepository.AddAsync(availabilitySlotDomain);
             await _unitOfWork.SaveChangesAsync();
 
@@ -79,8 +80,9 @@ public class TutorAvailabilitySlotController : ControllerBase
         }
     }
 
-    private async Task<IActionResult> GetSlots(Expression<Func<Tutor, bool>> predicate)
+    private async Task<ActionResult<List<AvailabilityDto>>> GetSlots(Expression<Func<Tutor, bool>> predicate)
     {
+        var tutors = await _unitOfWork.TutorRepository.GetAllAsync();
         Tutor? tutor = await _unitOfWork.TutorRepository.FirstOrDefaultAsync(predicate);
 
         if (tutor == null) return NotFound();
@@ -110,12 +112,19 @@ public class TutorAvailabilitySlotController : ControllerBase
         await _unitOfWork.SaveChangesAsync();
         return Ok();
     }
-    private bool CheckForSlotOverlap(Guid tutorId, DayOfWeek day, TimeSpan newStartTime, TimeSpan newEndTime, Guid excludedSlotId)
+    private async Task<bool> CheckForSlotOverlap(Tutor tutor, AvailabilitySlot availabilitySlot)
     {
         // Check for slots that overlap with the new slot
-        var overlappingSlots = _unitOfWork.AvailabilitySlotRepository.GetAll();
+        var overlappingSlots = await _unitOfWork.AvailabilitySlotRepository
+            .WhereAsync(slot => tutor.Id == slot.TutorId &&
+                ((availabilitySlot.StartTime >= slot.StartTime && availabilitySlot.StartTime <= slot.EndTime) ||
+                 (availabilitySlot.EndTime >= slot.StartTime && availabilitySlot.EndTime <= slot.EndTime)));
 
-        foreach(var overlappingSlot in overlappingSlots) { }
+
+
+
+
+        overlappingSlots = overlappingSlots.Where(slot => !(availabilitySlot.StartTime <= slot.StartTime && availabilitySlot.EndTime >= slot.EndTime)).ToList();
 
         // Return true if there are any overlapping slots
         return overlappingSlots.Any();

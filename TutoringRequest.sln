@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TutoringRequest.Models", "T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TutoringRequest.Api", "TutoringRequest.Api\TutoringRequest.Api.csproj", "{9CB38EB6-7F78-4204-AB28-64F6FDA41B68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TutoringRequest.Test", "TutoringRequest.Test\TutoringRequest.Test.csproj", "{FEC01092-275E-4977-8F02-07197499F61C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TutoringRequest.Test", "TutoringRequest.Test\TutoringRequest.Test.csproj", "{FEC01092-275E-4977-8F02-07197499F61C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

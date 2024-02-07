@@ -4,75 +4,25 @@ using TutoringRequest.Models.Domain;
 
 namespace TutoringRequest.Data.Repositories.TestRepositories;
 
-public class AvailabilitySlotInMemoryRepo : IAvailabilitySlotRepository
+public class AvailabilitySlotInMemoryRepo : GenericInMemoryRepo<AvailabilitySlot>, IAvailabilitySlotRepository
 {
-    public void Add(AvailabilitySlot entity)
+    public AvailabilitySlotInMemoryRepo()
     {
-        throw new NotImplementedException();
+        
+    }
+    public AvailabilitySlotInMemoryRepo(List<AvailabilitySlot> entities) : base(entities)
+    {
     }
 
-    public Task AddAsync(AvailabilitySlot entity)
+    public async Task<List<AvailabilitySlot>> GetTutorAvailabilitySlotsAsync(Tutor tutor)
     {
-        throw new NotImplementedException();
+        return await Task.Run( () => _entities.Where(a => a.TutorId == tutor.Id).ToList());
     }
 
-    public AvailabilitySlot? FirstOrDefault(Expression<Func<AvailabilitySlot, bool>> predicate)
-    {
-        throw new NotImplementedException();
-    }
 
-    public Task<AvailabilitySlot?> FirstOrDefaultAsync(Expression<Func<AvailabilitySlot, bool>> predicate)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IEnumerable<AvailabilitySlot> GetAll()
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<IEnumerable<AvailabilitySlot>> GetAllAsync()
-    {
-        throw new NotImplementedException();
-    }
 
     public List<AvailabilitySlot> GetTutorAvailabilitySlots(Tutor tutor)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<List<AvailabilitySlot>> GetTutorAvailabilitySlotsAsync(Tutor tutor)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void Remove(AvailabilitySlot entity)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task RemoveAsync(AvailabilitySlot entity)
-    {
-        throw new NotImplementedException();
-    }
-
-    public AvailabilitySlot? Update(Guid id, AvailabilitySlot newValues)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<AvailabilitySlot?> UpdateAsync(Guid id, AvailabilitySlot newValues)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IEnumerable<AvailabilitySlot> Where(Expression<Func<AvailabilitySlot, bool>> predicate)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<List<AvailabilitySlot>> WhereAsync(Expression<Func<AvailabilitySlot, bool>> predicate)
-    {
-        throw new NotImplementedException();
+        return _entities.Where(a => a.TutorId == tutor.Id).ToList();
     }
 }

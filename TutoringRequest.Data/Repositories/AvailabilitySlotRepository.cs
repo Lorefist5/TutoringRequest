@@ -6,6 +6,7 @@ namespace TutoringRequest.Data.Repositories;
 
 public class AvailabilitySlotRepository : GenericRepository<AvailabilitySlot>, IAvailabilitySlotRepository
 {
+
     public AvailabilitySlotRepository(TutoringDbContext context) : base(context)
     {
     }
