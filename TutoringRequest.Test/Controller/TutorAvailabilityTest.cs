@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TutoringRequest.Api.Controllers;
 using TutoringRequest.Api.Mapping;
+using TutoringRequest.Data.Repositories.InMemoryRepositories;
 using TutoringRequest.Data.Repositories.Interfaces;
 using TutoringRequest.Data.Repositories.TestRepositories;
 using TutoringRequest.Models.Domain;
@@ -15,6 +16,7 @@ public class TutorAvailabilityTest
     IStudentRepository studentRepository;
     ITutorRepository tutorRepository;
     IAvailabilitySlotRepository availabilitySlotRepository;
+    IMajorRepository majorRepository;
     IUnitOfWork unitOfWork;
     IMapper mapper;
     public TutorAvailabilityTest()
@@ -57,7 +59,8 @@ public class TutorAvailabilityTest
         studentRepository = new StudentInMemoryRepo(students);
         tutorRepository = new TutorInMemoryRepo(tutors);
         availabilitySlotRepository = new AvailabilitySlotInMemoryRepo(slots);
-        unitOfWork = new UnitOfWorkTest(tutorRepository, availabilitySlotRepository, studentRepository);
+        majorRepository = new MajorInMemoryRepo();
+        unitOfWork = new UnitOfWorkTest(tutorRepository, availabilitySlotRepository, studentRepository,majorRepository);
         mapper = AutoMappingProfiles.Configure();
     }
     [Test]

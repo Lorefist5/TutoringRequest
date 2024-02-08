@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using TutoringRequest.Api.Mapping;
 using TutoringRequest.Data;
-using TutoringRequest.Data.Repositories;
+using TutoringRequest.Data.Repositories.DatabaseRepositories;
 using TutoringRequest.Data.Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +24,7 @@ builder.Services.AddDbContext<TutoringDbContext>(options =>
 builder.Services.AddScoped<ITutorRepository, TutorRepository>();
 builder.Services.AddScoped<IAvailabilitySlotRepository, AvailabilitySlotRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+builder.Services.AddScoped<IMajorRepository, MajorRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
