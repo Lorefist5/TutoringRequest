@@ -11,7 +11,11 @@ public class UnitOfWork : IUnitOfWork
         IAvailabilitySlotRepository availabilitySlotRepository, 
         IStudentRepository studentRepository,
         IMajorRepository majorRepository,
-        ICourseRepository courseRepository)
+        ICourseRepository courseRepository,
+        IAdminAccountInfoRepository adminAccountInfoRepository,
+        IAdministratorRepository administratorRepository,
+        IAdminRoleRepository adminRoleRepository
+        )
     {
         _tutoringDbContext = tutoringDbContext;
         TutorRepository = tutorRepository;
@@ -19,12 +23,22 @@ public class UnitOfWork : IUnitOfWork
         StudentRepository = studentRepository;
         MajorRepository = majorRepository;
         CourseRepository = courseRepository;
+        AdminAccountInfoRepository = adminAccountInfoRepository;
+        AdministratorRepository = administratorRepository;
+        AdminRoleRepository = adminRoleRepository;
     }
     public ITutorRepository TutorRepository { get; }
     public IAvailabilitySlotRepository AvailabilitySlotRepository { get; }
     public IStudentRepository StudentRepository { get; }
     public IMajorRepository MajorRepository { get; }
     public ICourseRepository CourseRepository { get; }
+
+    public IAdminAccountInfoRepository AdminAccountInfoRepository { get; }
+
+    public IAdministratorRepository AdministratorRepository { get; }
+
+    public IAdminRoleRepository AdminRoleRepository { get; }
+
     public void SaveChanges()
     {
         _tutoringDbContext.SaveChanges();
