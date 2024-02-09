@@ -20,6 +20,7 @@ public class AutoMappingProfiles : Profile
         CreateMap<AddMajorDto, Major>().ReverseMap();
         CreateMap<MajorDto, Major>().ReverseMap();
         CreateMap<CourseDto, Course>().ReverseMap();    
+        CreateMap<AddCourseDto, Course>().ReverseMap();
     }
     public static IMapper Configure()
     {

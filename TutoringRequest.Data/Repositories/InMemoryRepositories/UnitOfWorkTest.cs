@@ -20,6 +20,8 @@ public class UnitOfWorkTest : IUnitOfWork
     public IStudentRepository StudentRepository { get; }
     public IMajorRepository MajorRepository { get; }
 
+    public ICourseRepository CourseRepository => throw new NotImplementedException();
+
     public void SaveChanges()
     {
         Console.WriteLine();
