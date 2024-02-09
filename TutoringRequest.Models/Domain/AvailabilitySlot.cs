@@ -1,5 +1,4 @@
 ﻿using TutoringRequest.Models.Domain.Base;
-using TutoringRequest.Models.Enums;
 namespace TutoringRequest.Models.Domain;
 
 public class AvailabilitySlot : BaseEntity

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using TutoringRequest.Models.Domain;
 using TutoringRequest.Models.DTO.AvailabilitySlot;
+using TutoringRequest.Models.DTO.Courses;
+using TutoringRequest.Models.DTO.Majors;
 using TutoringRequest.Models.DTO.Tutors;
 
 namespace TutoringRequest.Api.Mapping;
@@ -15,6 +17,9 @@ public class AutoMappingProfiles : Profile
             .ForMember(dest => dest.Day, opt => opt.MapFrom(src => src.Day.ToString()));
         CreateMap<AddAvailabilitySlotRequest, AvailabilitySlot>().ReverseMap();
         CreateMap<UpdateAvailabilitySlotRequest, AvailabilitySlot>().ReverseMap();
+        CreateMap<AddMajorDto, Major>().ReverseMap();
+        CreateMap<MajorDto, Major>().ReverseMap();
+        CreateMap<CourseDto, Course>().ReverseMap();    
     }
     public static IMapper Configure()
     {

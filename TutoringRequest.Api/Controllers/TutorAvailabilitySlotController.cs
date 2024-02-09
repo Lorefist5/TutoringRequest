@@ -6,7 +6,6 @@ using System.Linq.Expressions;
 using TutoringRequest.Data.Repositories.Interfaces;
 using TutoringRequest.Models.Domain;
 using TutoringRequest.Models.DTO.AvailabilitySlot;
-using TutoringRequest.Models.Enums;
 
 namespace TutoringRequest.Api.Controllers;
 

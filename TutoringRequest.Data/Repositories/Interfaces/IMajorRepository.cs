@@ -4,4 +4,6 @@ namespace TutoringRequest.Data.Repositories.Interfaces;
 
 public interface IMajorRepository : IGenericRepository<Major>
 {
+    public List<Course> GetCoursesInMajor(Major major);
+    public Task<List<Course>> GetCoursesInMajorAsync(Major major);
 }
