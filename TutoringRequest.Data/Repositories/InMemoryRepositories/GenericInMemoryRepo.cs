@@ -4,7 +4,7 @@ using TutoringRequest.Models.Domain.Base;
 
 namespace TutoringRequest.Data.Repositories.TestRepositories;
 
-public class GenericInMemoryRepo<T> : IGenericRepository<T> where T : BaseEntity
+abstract public class GenericInMemoryRepo<T> : IGenericRepository<T> where T : BaseEntity
 {
     protected readonly List<T> _entities;
     public GenericInMemoryRepo()

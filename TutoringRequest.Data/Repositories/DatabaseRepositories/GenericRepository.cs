@@ -5,7 +5,7 @@ using TutoringRequest.Models.Domain.Base;
 
 namespace TutoringRequest.Data.Repositories.DatabaseRepositories;
 
-public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
+abstract public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 {
     protected readonly DbContext _context;
     protected readonly DbSet<T> _entities;
