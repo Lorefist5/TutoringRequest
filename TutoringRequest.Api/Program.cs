@@ -25,7 +25,10 @@ builder.Services.AddScoped<ITutorRepository, TutorRepository>();
 builder.Services.AddScoped<IAvailabilitySlotRepository, AvailabilitySlotRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IMajorRepository, MajorRepository>();
-builder.Services.AddScoped<ICourseRepository, CourseRepository>();  
+builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+builder.Services.AddScoped<IAdminAccountInfoRepository, AdminAccountInfoRepository>();
+builder.Services.AddScoped<IAdminRoleRepository, AdminRoleRepository>();
+builder.Services.AddScoped<IAdministratorRepository,AdministratorRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();

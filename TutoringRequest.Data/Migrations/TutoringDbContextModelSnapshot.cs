@@ -40,7 +40,7 @@ namespace TutoringRequest.Data.Migrations
                     b.HasIndex("AdminId")
                         .IsUnique();
 
-                    b.ToTable("AdminAccountInfos");
+                    b.ToTable("AdminAccountInfos", (string)null);
                 });
 
             modelBuilder.Entity("TutoringRequest.Models.Domain.AdminRole", b =>
@@ -63,7 +63,7 @@ namespace TutoringRequest.Data.Migrations
 
                     b.HasIndex("AdminAccountInfoId");
 
-                    b.ToTable("AdminRoles");
+                    b.ToTable("AdminRoles", (string)null);
                 });
 
             modelBuilder.Entity("TutoringRequest.Models.Domain.Administrator", b =>
@@ -92,7 +92,7 @@ namespace TutoringRequest.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Administrators");
+                    b.ToTable("Administrators", (string)null);
                 });
 
             modelBuilder.Entity("TutoringRequest.Models.Domain.AvailabilitySlot", b =>
@@ -117,7 +117,7 @@ namespace TutoringRequest.Data.Migrations
 
                     b.HasIndex("TutorId");
 
-                    b.ToTable("AvailabilitySlots");
+                    b.ToTable("AvailabilitySlots", (string)null);
                 });
 
             modelBuilder.Entity("TutoringRequest.Models.Domain.Course", b =>
@@ -142,7 +142,7 @@ namespace TutoringRequest.Data.Migrations
 
                     b.HasIndex("TutorId");
 
-                    b.ToTable("Courses");
+                    b.ToTable("Courses", (string)null);
                 });
 
             modelBuilder.Entity("TutoringRequest.Models.Domain.Major", b =>
@@ -157,7 +157,7 @@ namespace TutoringRequest.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Majors");
+                    b.ToTable("Majors", (string)null);
                 });
 
             modelBuilder.Entity("TutoringRequest.Models.Domain.Student", b =>
@@ -179,7 +179,7 @@ namespace TutoringRequest.Data.Migrations
                     b.HasIndex("StudentNumber")
                         .IsUnique();
 
-                    b.ToTable("Students");
+                    b.ToTable("Students", (string)null);
                 });
 
             modelBuilder.Entity("TutoringRequest.Models.Domain.Tutor", b =>
@@ -198,7 +198,7 @@ namespace TutoringRequest.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tutors");
+                    b.ToTable("Tutors", (string)null);
                 });
 
             modelBuilder.Entity("TutoringRequest.Models.Domain.TutoringSection", b =>
@@ -233,7 +233,7 @@ namespace TutoringRequest.Data.Migrations
 
                     b.HasIndex("TutorId");
 
-                    b.ToTable("TutoringSections");
+                    b.ToTable("TutoringSections", (string)null);
                 });
 
             modelBuilder.Entity("TutoringRequest.Models.Domain.AdminAccountInfo", b =>

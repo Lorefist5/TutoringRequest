@@ -8,6 +8,7 @@ public class TutoringDbContext : DbContext
     public TutoringDbContext(DbContextOptions<TutoringDbContext> options)
      : base(options)
     {
+        Database.Migrate();
     }
     public DbSet<Course> Courses { get; set; }
     public DbSet<Tutor> Tutors { get; set; }
