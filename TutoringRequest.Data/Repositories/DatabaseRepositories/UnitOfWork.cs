@@ -7,38 +7,27 @@ public class UnitOfWork : IUnitOfWork
     private readonly TutoringDbContext _tutoringDbContext;
 
     public UnitOfWork(TutoringDbContext tutoringDbContext, 
-        ITutorRepository tutorRepository, 
         IAvailabilitySlotRepository availabilitySlotRepository, 
-        IStudentRepository studentRepository,
         IMajorRepository majorRepository,
         ICourseRepository courseRepository,
-        IAdminAccountInfoRepository adminAccountInfoRepository,
-        IAdministratorRepository administratorRepository,
-        IAdminRoleRepository adminRoleRepository
+        IAccountRepository accountRepository,
+        IRoleRepository roleRepository
         )
     {
         _tutoringDbContext = tutoringDbContext;
-        TutorRepository = tutorRepository;
         AvailabilitySlotRepository = availabilitySlotRepository;
-        StudentRepository = studentRepository;
         MajorRepository = majorRepository;
         CourseRepository = courseRepository;
-        AdminAccountInfoRepository = adminAccountInfoRepository;
-        AdministratorRepository = administratorRepository;
-        AdminRoleRepository = adminRoleRepository;
+        AccountRepository = accountRepository;
+        RoleRepository = roleRepository;
     }
-    public ITutorRepository TutorRepository { get; }
     public IAvailabilitySlotRepository AvailabilitySlotRepository { get; }
-    public IStudentRepository StudentRepository { get; }
     public IMajorRepository MajorRepository { get; }
     public ICourseRepository CourseRepository { get; }
 
-    public IAdminAccountInfoRepository AdminAccountInfoRepository { get; }
 
-    public IAdministratorRepository AdministratorRepository { get; }
-
-    public IAdminRoleRepository AdminRoleRepository { get; }
-
+    public IAccountRepository AccountRepository { get; }
+    public IRoleRepository RoleRepository { get; }
     public void SaveChanges()
     {
         _tutoringDbContext.SaveChanges();

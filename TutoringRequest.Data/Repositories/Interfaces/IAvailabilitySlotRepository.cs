@@ -4,6 +4,6 @@ namespace TutoringRequest.Data.Repositories.Interfaces;
 
 public interface IAvailabilitySlotRepository : IGenericRepository<AvailabilitySlot>
 {
-    public Task<List<AvailabilitySlot>> GetTutorAvailabilitySlotsAsync(Tutor tutor);
-    public List<AvailabilitySlot> GetTutorAvailabilitySlots(Tutor tutor);
+    //public Task<List<AvailabilitySlot>> GetTutorAvailabilitySlotsAsync(Tutor tutor);
+    //public List<AvailabilitySlot> GetTutorAvailabilitySlots(Tutor tutor);
 }

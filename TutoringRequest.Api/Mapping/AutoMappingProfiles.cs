@@ -12,8 +12,7 @@ public class AutoMappingProfiles : Profile
 {
     public AutoMappingProfiles()
     {
-        CreateMap<TutorDto, Tutor>().ReverseMap();
-        CreateMap<AddTutorRequest, Tutor>().ReverseMap();
+        CreateMap<TutorDto, Account>().ReverseMap();
         CreateMap<AvailabilitySlot, AvailabilityDto>()
             .ForMember(dest => dest.Day, opt => opt.MapFrom(src => src.Day.ToString()));
         CreateMap<AddAvailabilitySlotRequest, AvailabilitySlot>().ReverseMap();
@@ -22,15 +21,12 @@ public class AutoMappingProfiles : Profile
         CreateMap<MajorDto, Major>().ReverseMap();
         CreateMap<CourseDto, Course>().ReverseMap();    
         CreateMap<AddCourseDto, Course>().ReverseMap();
-        CreateMap<AddAdministratorDto, Administrator>().ReverseMap();
-        CreateMap<AdministratorDto, Administrator>();
+
     }
     public static IMapper Configure()
     {
         var mapperConfiguration = new MapperConfiguration(cfg =>
         {
-            cfg.CreateMap<TutorDto, Tutor>().ReverseMap();
-            cfg.CreateMap<AddTutorRequest, Tutor>().ReverseMap();
             cfg.CreateMap<AvailabilitySlot, AvailabilityDto>()
                 .ForMember(dest => dest.Day, opt => opt.MapFrom(src => src.Day.ToString()));
             cfg.CreateMap<AddAvailabilitySlotRequest, AvailabilitySlot>().ReverseMap();
