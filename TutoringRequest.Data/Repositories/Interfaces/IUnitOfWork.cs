@@ -7,6 +7,7 @@ public interface IUnitOfWork
     public ICourseRepository CourseRepository { get; }
     public IAccountRepository AccountRepository { get; }
     public IRoleRepository RoleRepository { get; }
+    public IResetTokenRepository ResetTokenRepository { get; }
     public void SaveChanges();
     public Task SaveChangesAsync();
 }

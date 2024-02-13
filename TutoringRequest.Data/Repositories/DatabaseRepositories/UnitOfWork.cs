@@ -11,7 +11,8 @@ public class UnitOfWork : IUnitOfWork
         IMajorRepository majorRepository,
         ICourseRepository courseRepository,
         IAccountRepository accountRepository,
-        IRoleRepository roleRepository
+        IRoleRepository roleRepository,
+        IResetTokenRepository resetTokenRepository
         )
     {
         _tutoringDbContext = tutoringDbContext;
@@ -20,11 +21,12 @@ public class UnitOfWork : IUnitOfWork
         CourseRepository = courseRepository;
         AccountRepository = accountRepository;
         RoleRepository = roleRepository;
+        ResetTokenRepository = resetTokenRepository;
     }
     public IAvailabilitySlotRepository AvailabilitySlotRepository { get; }
     public IMajorRepository MajorRepository { get; }
     public ICourseRepository CourseRepository { get; }
-
+    public IResetTokenRepository ResetTokenRepository { get; }
 
     public IAccountRepository AccountRepository { get; }
     public IRoleRepository RoleRepository { get; }

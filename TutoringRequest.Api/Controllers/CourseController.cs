@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 using TutoringRequest.Data.Repositories.Interfaces;
@@ -30,6 +31,7 @@ public class CourseController : ControllerBase
         return await GetCourse(c => c.Id == id);
     }
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> CreateCourse([FromBody] AddCourseDto addCourseDto)
     {
         if (ModelState.IsValid)
@@ -45,11 +47,13 @@ public class CourseController : ControllerBase
 
     }
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateCourseById(Guid id, [FromBody]UpdateCourseDto updateCourseDto)
     {
         return await UpdateCourse(c => c.Id == id, updateCourseDto);
     }
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteCourse(Guid id)
     {
         return await DeleteCourse(c => c.Id == id);

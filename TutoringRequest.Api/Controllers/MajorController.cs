@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 using TutoringRequest.Data.Repositories.Interfaces;
@@ -28,6 +29,7 @@ public class MajorController : ControllerBase
         return Ok(majorDtos);
     }
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<MajorDto>> CreateMajor([FromBody] AddMajorDto addMajorDto)
     {
         var majorDomain = _mapper.Map<Major>(addMajorDto);
@@ -41,11 +43,13 @@ public class MajorController : ControllerBase
         return await GetMajor(major => major.Id == id);
     }
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = "Admin")]
     public async Task<ActionResult<UpdateMajorDto>> UpdateMajorById(Guid id, [FromBody] UpdateMajorDto updateMajorDto)
     {
         return await UpdateMajor(major => major.Id == id, updateMajorDto);
     }
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteMajor(Guid id)
     {
         Major? major = _unitOfWork.MajorRepository.FirstOrDefault(m => m.Id == id);

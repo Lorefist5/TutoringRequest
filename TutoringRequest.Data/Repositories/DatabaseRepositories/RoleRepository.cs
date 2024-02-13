@@ -1,4 +1,5 @@
-﻿using TutoringRequest.Data.Repositories.Interfaces;
+﻿using TutoringRequest.Data.Repositories.Base;
+using TutoringRequest.Data.Repositories.Interfaces;
 using TutoringRequest.Models.Domain;
 using TutoringRequest.Models.Enums;
 

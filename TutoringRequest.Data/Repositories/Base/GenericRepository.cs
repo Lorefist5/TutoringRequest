@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using TutoringRequest.Data.Repositories.Interfaces;
+using TutoringRequest.Data.Repositories.Base.Interfaces;
 using TutoringRequest.Models.Domain.Base;
 
-namespace TutoringRequest.Data.Repositories.DatabaseRepositories;
+namespace TutoringRequest.Data.Repositories.Base;
 
 abstract public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 {

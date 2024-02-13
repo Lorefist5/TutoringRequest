@@ -154,6 +154,38 @@ namespace TutoringRequest.Data.Migrations
                     b.ToTable("Majors");
                 });
 
+            modelBuilder.Entity("TutoringRequest.Models.Domain.ResetToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("ExpirationTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid?>("ModifiedById")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("ResetTokens");
+                });
+
             modelBuilder.Entity("TutoringRequest.Models.Domain.Role", b =>
                 {
                     b.Property<Guid>("Id")
@@ -177,17 +209,17 @@ namespace TutoringRequest.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("70acc156-27c3-4890-afb3-254d2f468091"),
+                            Id = new Guid("cf3e7e23-4974-43f0-8a2c-b6e8e83fccf8"),
                             RoleName = "Admin"
                         },
                         new
                         {
-                            Id = new Guid("e9c30ad9-ff45-49ea-ae85-f64db8bb6bdf"),
+                            Id = new Guid("0e9d9cc1-3aba-4209-8a90-b24fa55c99c8"),
                             RoleName = "Student"
                         },
                         new
                         {
-                            Id = new Guid("e7247af7-65f5-42d6-bc45-2ac21803123e"),
+                            Id = new Guid("55ed9d2c-049a-44f9-8f69-cda2e90de7b8"),
                             RoleName = "Tutor"
                         });
                 });
@@ -268,6 +300,17 @@ namespace TutoringRequest.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Major");
+                });
+
+            modelBuilder.Entity("TutoringRequest.Models.Domain.ResetToken", b =>
+                {
+                    b.HasOne("TutoringRequest.Models.Domain.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("TutoringRequest.Models.Domain.TutoringSection", b =>

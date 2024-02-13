@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace TutoringRequest.Models.DTO.Accounts;
+namespace TutoringRequest.Models.DTO.Auth;
 
 public class RegisterDto
 {
@@ -18,5 +18,4 @@ public class RegisterDto
     [Required(ErrorMessage = "Email is required")]
     [EmailAddress(ErrorMessage = "Invalid email address")]
     public string Email { get; set; }
-    public string? AuthToken { get; set; }
 }

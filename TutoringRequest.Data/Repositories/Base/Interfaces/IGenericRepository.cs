@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 using TutoringRequest.Models.Domain.Base;
-namespace TutoringRequest.Data.Repositories.Interfaces;
+namespace TutoringRequest.Data.Repositories.Base.Interfaces;
 
 public interface IGenericRepository<T> where T : BaseEntity
 {
@@ -15,5 +15,5 @@ public interface IGenericRepository<T> where T : BaseEntity
     public Task<IEnumerable<T>> GetAllAsync();
     public IEnumerable<T> GetAll();
     public T? Update(Guid id, T newValues);
-    public Task<T?> UpdateAsync(Guid id, T newValues);  
+    public Task<T?> UpdateAsync(Guid id, T newValues);
 }

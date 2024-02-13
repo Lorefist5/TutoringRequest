@@ -17,6 +17,7 @@ public class TutoringDbContext : DbContext
     public DbSet<AvailabilitySlot> AvailabilitySlots { get; set; }
     public DbSet<Major> Majors { get; set; }
     public DbSet<TutoringSection> TutoringSections { get; set; }
+    public DbSet<ResetToken> ResetTokens { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlite("Data source=Test.db");

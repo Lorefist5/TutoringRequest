@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TutoringRequest.Data.Repositories.Base;
 using TutoringRequest.Data.Repositories.Interfaces;
 using TutoringRequest.Models.Domain;
 

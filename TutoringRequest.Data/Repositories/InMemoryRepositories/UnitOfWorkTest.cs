@@ -26,6 +26,8 @@ public class UnitOfWorkTest : IUnitOfWork
 
     public IRoleRepository RoleRepository => throw new NotImplementedException();
 
+    public IResetTokenRepository ResetTokenRepository => throw new NotImplementedException();
+
     public void SaveChanges()
     {
         Console.WriteLine();
