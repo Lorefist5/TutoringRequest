@@ -1,125 +1,137 @@
-﻿using System;
-using System.Net.Http;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using TutoringRequest.Api.Services;
-using TutoringRequest.Api.Services.Interfaces;
+using TutoringRequest.ConsoleTest.Utilities;
+using TutoringRequest.Models.Domain;
 using TutoringRequest.Models.DTO.Auth;
 using TutoringRequest.Models.DTO.Tutors;
+using TutoringRequest.Services.HttpClientServices;
 
 class Program
 {
     static async Task Main()
     {
-        await Console.Out.WriteLineAsync("Enter your email: ");
-        var email = Console.ReadLine();
-
-
-        //string apiUrl = "https://localhost:7249/api/";
-        //string email = "user1@example.com";
-        //string password = "Lorefist";
-
-        //// Make a login request
-        //string token = await Login(apiUrl, email, password);
-
-        //if (!string.IsNullOrEmpty(token))
-        //{
-
-        //    // Create a tutor with dummy data
-        //    var tutorDto = new AddTutorDto
-        //    {
-        //        Name = "John Doe",
-        //        Password = "SecurePassword",
-        //        StudentNumber = "123456",
-        //        PhoneNumber = "123-456-7890",
-        //        Email = "john.doe@example.com"
-        //    };
-
-        //    await CreateTutor(apiUrl, token, tutorDto);
-        //    await GetTutors(apiUrl, token);
-        //}
-
-        //Console.ReadLine(); // Pause console app so you can see the output
-    }
-
-    static async Task ResetPassword()
-    {
-        using (HttpClient client = new HttpClient())
+        var apiUrl = "https://localhost:7249/api/";
+        HttpClient client = new HttpClient();
+        AuthApiService authApiService = new AuthApiService(client);
+        TutorApiService tutorApiService = new TutorApiService(client, "Tutor");
+        client.BaseAddress = new Uri(apiUrl);
+        var choices = new Dictionary<string, string>()
         {
+            { "L" ,"Login to the app" },
+            { "S", "Sign up to the app"},
+            { "F", "Forgot password"},
+            { "R", "Reset password"},
+        };
+        var token = "";
 
-        }
-    }
-    static async Task<string> Login(string apiUrl, string email, string password)
-    {
-        using (HttpClient client = new HttpClient())
+        while (string.IsNullOrWhiteSpace(token))
         {
-
-            var content = new StringContent($"{{\"Email\":\"{email}\", \"Password\":\"{password}\"}}", Encoding.UTF8, "application/json");
-
-
-
-            var response = await client.PostAsync($"{apiUrl}Auth/login", content);
-
-
-            if (!response.IsSuccessStatusCode)
+            var answer = UserInput.MultipleChoice("Select the api", choices, true);
+            if (answer == "L")
             {
-                return "";
+                var loginDto = UserInput.AskForLoginInfo();
+                token = await authApiService.LoginAsync(loginDto);
+                await Console.Out.WriteLineAsync(token);
             }
-
-            var token = await response.Content.ReadFromJsonAsync<AuthToken>();
-            Console.WriteLine($"Token: {token}");
-
-            return token.Token;
-        }
-    }
-    static async Task CreateTutor(string apiUrl, string token, AddTutorDto tutorDto)
-    {
-        using (HttpClient client = new HttpClient())
-        {
-            // Attach the JWT token to the Authorization header
-            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-
-            // Convert the tutor data to JSON
-            var jsonContent = JsonSerializer.Serialize(tutorDto);
-            var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-
-
-            // Make a request to the protected endpoint to create a tutor
-            var response = await client.PostAsync($"{apiUrl}Tutor", content);
-
-            // Ensure the request was successful
-            if (!response.IsSuccessStatusCode)
+            else if (answer == "S")
             {
-                return;
+                var registerDto = UserInput.AskForRegisterInfo();
+                token = await authApiService.RegisterAsync(registerDto);
+                await Console.Out.WriteLineAsync(token);
             }
-
-            // Read the response content
-            var createdTutor = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"Created Tutor: {createdTutor}");
-        }
-    }
-
-    static async Task GetTutors(string apiUrl, string token)
-    {
-        using (HttpClient client = new HttpClient())
-        {
-            // Attach the JWT token to the Authorization header
-            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-
-            // Make a request to the protected endpoint (e.g., GetTutors)
-            var response = await client.GetAsync($"{apiUrl}Tutor");
-
-            if (!response.IsSuccessStatusCode)
+            else if (answer == "F")
             {
-                return;
-            }
+                await Console.Out.WriteLineAsync("Enter your email: ");
+                var resetPasswordEmail = Console.ReadLine();
 
-            // Read the response content
-            var tutors = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"Tutors: {tutors}");
+                var isSuccessfullForgotPassword = await authApiService.ForgotPassword(resetPasswordEmail);
+                if(isSuccessfullForgotPassword) await Console.Out.WriteLineAsync($"Email was sent to {resetPasswordEmail}");
+            }
+            else if(answer == "R")
+            {
+                await Console.Out.WriteLineAsync("Enter your reset token: ");
+                var resetTokenString = Console.ReadLine();
+                if (Guid.TryParse(resetTokenString, out Guid resetToken))
+                {
+                    await Console.Out.WriteLineAsync("Enter your new password: ");
+                    var newPassword = Console.ReadLine();
+                    var isPasswordResetSuccessful = await authApiService.ResetPassword(resetToken, newPassword);
+                    if (isPasswordResetSuccessful) await Console.Out.WriteLineAsync("Password reset was sucessful");
+                    else await Console.Out.WriteLineAsync("Password reset failed");
+                }
+                else
+                {
+                    Console.WriteLine("Invalid GUID string");
+                }
+
+            }
         }
+
+        if (!string.IsNullOrEmpty(token))
+        {
+            await Console.Out.WriteLineAsync("Access granted.");
+            var authorizedChoices = new Dictionary<string, string>()
+            {
+                { "T" ,"Tutor section" },
+                { "S", "Student section"},
+            };
+
+            var authorizedAnswer = UserInput.MultipleChoice("Select the authorized apis", authorizedChoices, true);
+
+            if(authorizedAnswer == "T")
+            {
+                var tutorChoices = new Dictionary<string, string>()
+                {
+                    { "G" , "Get all the tutors" },
+                    { "U" , "Update a tutor" },
+                    { "C" , "Create a tutor" },
+                    { "D" , "Delete a tutor" },
+                    { "G1" , "Get a tutor" },
+                };
+                var tutorAnswer = UserInput.MultipleChoice("Select a tutor api", tutorChoices, true);
+                tutorApiService.AddToken(token);
+
+                if(tutorAnswer  == "G")
+                {
+                    var tutors = await tutorApiService.GetAllAsync<TutorDto>();
+
+                    foreach(TutorDto tutor in tutors)
+                    {
+                        await Console.Out.WriteLineAsync(tutor.Name);
+                    }
+                }
+                else if(tutorAnswer == "U")
+                {
+
+                }
+                else if (tutorAnswer == "C")
+                {
+                    RegisterDto registerUser = UserInput.AskForRegisterInfo();
+                    AddTutorDto addTutorDto = new AddTutorDto()
+                    {
+                        Email = registerUser.Email,
+                        Name = registerUser.Name,
+                        Password = registerUser.Password,
+                        PhoneNumber = registerUser.PhoneNumber,
+                        StudentNumber = registerUser.StudentNumber
+                    };
+                    bool isSuccess = await tutorApiService.PostAsync<AddTutorDto>(addTutorDto);
+                    if (isSuccess) await Console.Out.WriteLineAsync("Tutor added");
+                    else await Console.Out.WriteLineAsync("Tutor wasn't added");
+                }
+                else if (tutorAnswer == "D")
+                {
+
+                }
+                else if (tutorAnswer == "")
+                {
+
+                }
+            }
+        }
+        Console.ReadLine();
     }
+
+
 }

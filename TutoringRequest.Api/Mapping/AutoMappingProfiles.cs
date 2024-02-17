@@ -4,6 +4,7 @@ using TutoringRequest.Models.DTO.Admin;
 using TutoringRequest.Models.DTO.AvailabilitySlot;
 using TutoringRequest.Models.DTO.Courses;
 using TutoringRequest.Models.DTO.Majors;
+using TutoringRequest.Models.DTO.Roles;
 using TutoringRequest.Models.DTO.Tutors;
 
 namespace TutoringRequest.Api.Mapping;
@@ -21,6 +22,7 @@ public class AutoMappingProfiles : Profile
         CreateMap<MajorDto, Major>().ReverseMap();
         CreateMap<CourseDto, Course>().ReverseMap();    
         CreateMap<AddCourseDto, Course>().ReverseMap();
+        CreateMap<RoleDto, Role>().ReverseMap();
 
     }
     public static IMapper Configure()
