@@ -2,16 +2,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using TutoringRequest.Api.Helpers.TokenHelpers;
 using TutoringRequest.Api.Mapping;
-using TutoringRequest.Api.Services.Interfaces;
 using TutoringRequest.Data;
 using TutoringRequest.Data.Repositories.DatabaseRepositories;
 using TutoringRequest.Data.Repositories.Interfaces;
-using TutoringRequest.Helpers.TokenHelpers;
 using TutoringRequest.Models.Enums;
 using TutoringRequest.Services.Interfaces;
 using TutoringRequest.Services.MessagingServices;
-using TutoringRequest.Services.TokenServices;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,7 +27,7 @@ builder.Services.AddDbContext<TutoringDbContext>(options =>
 //dotnet user-secrets set "EmailSettings:Password" "your-app-password"
 //That way you can send emails with your gmail account
 builder.Services.AddSingleton<IEmailService, EmailService>();
-builder.Services.AddScoped<IResetTokenService, ResetTokenService>();
+builder.Services.AddScoped<ResetTokenGenerator>();
 builder.Services.AddScoped<IResetTokenRepository, ResetTokenRepository>();
 builder.Services.AddScoped<IAvailabilitySlotRepository, AvailabilitySlotRepository>();
 builder.Services.AddScoped<IMajorRepository, MajorRepository>();

@@ -3,9 +3,8 @@ using TutoringRequest.Data.Repositories.Interfaces;
 using TutoringRequest.Models.Domain;
 using Microsoft.AspNetCore.Authorization;
 using TutoringRequest.Models.DTO.Auth;
-using TutoringRequest.Api.Services.Interfaces;
 using TutoringRequest.Services.Interfaces;
-using TutoringRequest.Helpers.TokenHelpers;
+using TutoringRequest.Api.Helpers.TokenHelpers;
 
 namespace TutoringRequest.Api.Controllers;
 
@@ -17,9 +16,9 @@ public class AuthController : ControllerBase
     private readonly IUnitOfWork _unitOfWork;
     private readonly TokenGenerator _tokenGenerator;
     private readonly IEmailService _emailService;
-    private readonly IResetTokenService _resetTokenService;
+    private readonly ResetTokenGenerator _resetTokenService;
 
-    public AuthController(IUnitOfWork unitOfWork, TokenGenerator tokenGenerator, IEmailService emailService, IResetTokenService resetTokenService)
+    public AuthController(IUnitOfWork unitOfWork, TokenGenerator tokenGenerator, IEmailService emailService, ResetTokenGenerator resetTokenService)
     {
         _unitOfWork = unitOfWork;
         this._tokenGenerator = tokenGenerator;

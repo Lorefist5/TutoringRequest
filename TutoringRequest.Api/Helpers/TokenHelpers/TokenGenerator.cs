@@ -1,11 +1,10 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using TutoringRequest.Models.Domain;
 
-namespace TutoringRequest.Helpers.TokenHelpers;
+namespace TutoringRequest.Api.Helpers.TokenHelpers;
 
 public class TokenGenerator
 {
@@ -46,6 +45,7 @@ public class TokenGenerator
         {
             Subject = new ClaimsIdentity(new[]
             {
+                new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()),
                 new Claim(ClaimTypes.Name, account.Email),
                 new Claim(ClaimTypes.Role, string.Join(",", stringfyRoles)),
                 new Claim("aud", Audience),
@@ -68,14 +68,13 @@ public class TokenGenerator
             Subject = new ClaimsIdentity(new[]
             {
             new Claim(ClaimTypes.Name, account.Email),
-            new Claim("reset", "true"),  
+            new Claim("reset", "true"),
         }),
-            Expires = DateTime.UtcNow.AddHours(1), 
+            Expires = DateTime.UtcNow.AddHours(1),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
         };
 
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
-
 }

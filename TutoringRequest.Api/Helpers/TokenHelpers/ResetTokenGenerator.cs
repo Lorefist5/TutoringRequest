@@ -1,16 +1,14 @@
-﻿using TutoringRequest.Api.Services.Interfaces;
-using TutoringRequest.Data.Repositories.Interfaces;
-using TutoringRequest.Helpers.TokenHelpers;
+﻿using TutoringRequest.Data.Repositories.Interfaces;
 using TutoringRequest.Models.Domain;
 
-namespace TutoringRequest.Services.TokenServices;
+namespace TutoringRequest.Api.Helpers.TokenHelpers;
 
-public class ResetTokenService : IResetTokenService
+public class ResetTokenGenerator
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly TokenGenerator _tokenGenerator;
 
-    public ResetTokenService(IUnitOfWork unitOfWork, TokenGenerator tokenGenerator)
+    public ResetTokenGenerator(IUnitOfWork unitOfWork, TokenGenerator tokenGenerator)
     {
         this._unitOfWork = unitOfWork;
         this._tokenGenerator = tokenGenerator;
