@@ -4,7 +4,7 @@ namespace TutoringRequest.ConsoleTest.Utilities;
 
 public class UserInput
 {
-    public static string MultipleChoice(string prompt, Dictionary<string, string> choices, bool printChoices)
+    public static string MultipleChoice(string prompt, List<Choice> choices, bool printChoices)
     {
 
 
@@ -15,13 +15,14 @@ public class UserInput
             {
                 foreach (var choice in choices)
                 {
-                    Console.WriteLine($"({choice.Key}).{choice.Value}");
+                    Console.WriteLine($"({choice.Name}).{choice.Description}");
                 }
             }
-            var answer = Console.ReadLine();
-
-            if (choices.ContainsKey(answer))
+            var answer = Console.ReadLine()!;
+            Choice? selectedChoice = choices.FirstOrDefault(c => c.Name == answer);
+            if (selectedChoice != null)
             {
+                selectedChoice.Action();
                 return answer;
             }
             else

@@ -4,6 +4,7 @@ using System.Text.Json;
 using TutoringRequest.ConsoleTest.Utilities;
 using TutoringRequest.Models.Domain;
 using TutoringRequest.Models.DTO.Auth;
+using TutoringRequest.Models.DTO.Roles;
 using TutoringRequest.Models.DTO.Tutors;
 using TutoringRequest.Services.HttpClientServices;
 
@@ -15,123 +16,83 @@ class Program
         HttpClient client = new HttpClient();
         AuthApiService authApiService = new AuthApiService(client);
         TutorApiService tutorApiService = new TutorApiService(client, "Tutor");
+        RoleApiService roleApiService = new RoleApiService(client, "Roles");
         client.BaseAddress = new Uri(apiUrl);
-        var choices = new Dictionary<string, string>()
+        bool isAuthorized = false;
+        var choices = new List<Choice>
         {
-            { "L" ,"Login to the app" },
-            { "S", "Sign up to the app"},
-            { "F", "Forgot password"},
-            { "R", "Reset password"},
+            new Choice("L", "Log in into the application", async () =>
+            {
+                var loginInfo = UserInput.AskForLoginInfo();
+                var response = await authApiService.LoginAsync(loginInfo);
+                isAuthorized = response.IsSuccessful;
+                if (!response.IsSuccessful)
+                {
+                    await Console.Out.WriteLineAsync(response.Message);
+                    return;
+                }
+                await Console.Out.WriteLineAsync("Log in successful!");
+                AuthorizedApis(authApiService.Roles!);
+            }),
+            new Choice("R", "Register into the application", async () =>
+            {
+                var loginInfo = UserInput.AskForRegisterInfo();
+                var response = await authApiService.RegisterAsync(loginInfo);
+                isAuthorized = response.IsSuccessful;
+                if (!response.IsSuccessful)
+                {
+                    await Console.Out.WriteLineAsync(response.Message);
+                    return;
+                }
+                await Console.Out.WriteLineAsync("Log in successful!");
+                AuthorizedApis(authApiService.Roles!);
+            }),
+            new Choice("F", "Forgot password", () =>
+            {
+
+            }),
+            new Choice("R", "Reset password", () =>
+            {
+
+            })
         };
-        var token = "";
-
-        while (string.IsNullOrWhiteSpace(token))
+        while (!isAuthorized)
         {
-            var answer = UserInput.MultipleChoice("Select the api", choices, true);
-            if (answer == "L")
-            {
-                var loginDto = UserInput.AskForLoginInfo();
-                token = await authApiService.LoginAsync(loginDto);
-                await Console.Out.WriteLineAsync(token);
-            }
-            else if (answer == "S")
-            {
-                var registerDto = UserInput.AskForRegisterInfo();
-                token = await authApiService.RegisterAsync(registerDto);
-                await Console.Out.WriteLineAsync(token);
-            }
-            else if (answer == "F")
-            {
-                await Console.Out.WriteLineAsync("Enter your email: ");
-                var resetPasswordEmail = Console.ReadLine();
-
-                var isSuccessfullForgotPassword = await authApiService.ForgotPassword(resetPasswordEmail);
-                if(isSuccessfullForgotPassword) await Console.Out.WriteLineAsync($"Email was sent to {resetPasswordEmail}");
-            }
-            else if(answer == "R")
-            {
-                await Console.Out.WriteLineAsync("Enter your reset token: ");
-                var resetTokenString = Console.ReadLine();
-                if (Guid.TryParse(resetTokenString, out Guid resetToken))
-                {
-                    await Console.Out.WriteLineAsync("Enter your new password: ");
-                    var newPassword = Console.ReadLine();
-                    var isPasswordResetSuccessful = await authApiService.ResetPassword(resetToken, newPassword);
-                    if (isPasswordResetSuccessful) await Console.Out.WriteLineAsync("Password reset was sucessful");
-                    else await Console.Out.WriteLineAsync("Password reset failed");
-                }
-                else
-                {
-                    Console.WriteLine("Invalid GUID string");
-                }
-
-            }
+            UserInput.MultipleChoice("Welcome to Tutoring request!", choices, true);
         }
 
-        if (!string.IsNullOrEmpty(token))
-        {
-            await Console.Out.WriteLineAsync("Access granted.");
-            var authorizedChoices = new Dictionary<string, string>()
-            {
-                { "T" ,"Tutor section" },
-                { "S", "Student section"},
-            };
 
-            var authorizedAnswer = UserInput.MultipleChoice("Select the authorized apis", authorizedChoices, true);
 
-            if(authorizedAnswer == "T")
-            {
-                var tutorChoices = new Dictionary<string, string>()
-                {
-                    { "G" , "Get all the tutors" },
-                    { "U" , "Update a tutor" },
-                    { "C" , "Create a tutor" },
-                    { "D" , "Delete a tutor" },
-                    { "G1" , "Get a tutor" },
-                };
-                var tutorAnswer = UserInput.MultipleChoice("Select a tutor api", tutorChoices, true);
-                tutorApiService.AddToken(token);
-
-                if(tutorAnswer  == "G")
-                {
-                    var tutors = await tutorApiService.GetAllAsync<TutorDto>();
-
-                    foreach(TutorDto tutor in tutors)
-                    {
-                        await Console.Out.WriteLineAsync(tutor.Name);
-                    }
-                }
-                else if(tutorAnswer == "U")
-                {
-
-                }
-                else if (tutorAnswer == "C")
-                {
-                    RegisterDto registerUser = UserInput.AskForRegisterInfo();
-                    AddTutorDto addTutorDto = new AddTutorDto()
-                    {
-                        Email = registerUser.Email,
-                        Name = registerUser.Name,
-                        Password = registerUser.Password,
-                        PhoneNumber = registerUser.PhoneNumber,
-                        StudentNumber = registerUser.StudentNumber
-                    };
-                    bool isSuccess = await tutorApiService.PostAsync<AddTutorDto>(addTutorDto);
-                    if (isSuccess) await Console.Out.WriteLineAsync("Tutor added");
-                    else await Console.Out.WriteLineAsync("Tutor wasn't added");
-                }
-                else if (tutorAnswer == "D")
-                {
-
-                }
-                else if (tutorAnswer == "")
-                {
-
-                }
-            }
-        }
         Console.ReadLine();
     }
 
 
+
+
+    private static void AuthorizedApis(List<string> roles)
+    {
+        var defaultApis = new List<Choice>()
+        {
+            new Choice("T", "Tutoring apis section", () =>
+            {
+
+            }),
+            new Choice("S", "Student apis section", () =>
+            {
+
+            }),
+
+        };
+        var adminApis = new List<Choice>()
+        {
+            new Choice("R", "Role apis section", () =>
+            {
+
+            })
+        };
+        var allApis = new List<Choice>(defaultApis);
+        if (roles.Contains("Admin")) allApis.AddRange(adminApis);
+
+        UserInput.MultipleChoice("Select the api section", allApis,true);
+    }
 }
