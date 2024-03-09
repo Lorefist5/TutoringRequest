@@ -9,11 +9,11 @@ namespace TutoringRequest.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class RolesController : ControllerBase
+public class RoleController : ControllerBase
 {
     private readonly IUnitOfWork _unitOfWork;
 
-    public RolesController(IUnitOfWork unitOfWork)
+    public RoleController(IUnitOfWork unitOfWork)
     {
         this._unitOfWork = unitOfWork;
     }
