@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using TutoringRequest.Models.Attributes;
+using TutoringRequest.Models.DTO.Http;
 using TutoringRequest.Models.DTO.Tutors;
 
 namespace TutoringRequest.Services.HttpClientServices.Base;
@@ -29,29 +30,35 @@ abstract public class GenericApiService
 
         return response;
     }
-    public async Task<List<T>> GetAllAsync<T>() where T : class
+    public async Task<HttpResponse<T>> GetAllAsync<T>() where T : class
     {
         HttpResponseMessage response = await _httpClient.GetAsync(_defaultRoute);
-
-        // Check if the request was successful
-        response.EnsureSuccessStatusCode();
-
-        try
+        HttpResponse<T> httpResponse = new HttpResponse<T>()
+        {            
+            IsSuccess = response.IsSuccessStatusCode,
+        };
+        if (response.IsSuccessStatusCode)
         {
-            string content = await response.Content.ReadAsStringAsync();
-            
-            List<T>? items = JsonSerializer.Deserialize<List<T>>(content, new JsonSerializerOptions
+            try
             {
-                PropertyNameCaseInsensitive = true 
-            });
+                string content = await response.Content.ReadAsStringAsync();
 
-            return items ?? new List<T>(); 
+                List<T>? items = JsonSerializer.Deserialize<List<T>>(content, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+                httpResponse.Values = items ?? new List<T>();
+                return httpResponse;
+            }
+            catch (JsonException jsonException)
+            {
+                await Console.Out.WriteLineAsync(jsonException.Message);
+                return httpResponse;
+            }
         }
-        catch (JsonException)
-        {
+         return httpResponse;
 
-            return new List<T>();
-        }
+
     }
     public async Task<T?> GetAsync<T>(string parameterName, string parameterValue) where T : class
     {
@@ -146,5 +153,5 @@ abstract public class GenericApiService
         return className;
     }
 }
-}
+
 
