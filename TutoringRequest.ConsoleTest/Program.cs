@@ -16,7 +16,7 @@ class Program
         HttpClient client = new HttpClient();
         AuthApiService authApiService = new AuthApiService(client);
         TutorApiService tutorApiService = new TutorApiService(client, "Tutor");
-        RoleApiService roleApiService = new RoleApiService(client, "Roles");
+        RoleApiService roleApiService = new RoleApiService(client, "Role");
         client.BaseAddress = new Uri(apiUrl);
         bool isAuthorized = false;
         var choices = new List<Choice>
