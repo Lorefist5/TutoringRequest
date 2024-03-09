@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using TutoringRequest.Models.DTO.Auth;
+using TutoringRequest.Services.HttpClientServices.Base;
 
 namespace TutoringRequest.Services.HttpClientServices;
 
@@ -81,5 +82,10 @@ public class AuthApiService
         {
             throw new ArgumentException("Invalid JWT format");
         }
+    }
+    public AuthApiService AddToken(string token)
+    {
+        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+        return this;
     }
 }
