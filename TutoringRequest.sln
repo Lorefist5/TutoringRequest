@@ -13,9 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TutoringRequest.Test", "Tut
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TutoringRequest.ConsoleTest", "TutoringRequest.ConsoleTest\TutoringRequest.ConsoleTest.csproj", "{6C671B7D-3D91-4F3C-BC57-2897408EFC9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TutoringRequest.Services", "TutoringRequest.Services\TutoringRequest.Services.csproj", "{0872AD3B-A751-4BE2-A5D7-04BCC03A6BE1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TutoringRequest.Helpers", "TutoringRequest.Helpers\TutoringRequest.Helpers.csproj", "{EA30AA5A-F92F-40E4-9A0C-5CBAB406118E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TutoringRequest.Services", "TutoringRequest.Services\TutoringRequest.Services.csproj", "{0872AD3B-A751-4BE2-A5D7-04BCC03A6BE1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +45,6 @@ Global
 		{0872AD3B-A751-4BE2-A5D7-04BCC03A6BE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0872AD3B-A751-4BE2-A5D7-04BCC03A6BE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0872AD3B-A751-4BE2-A5D7-04BCC03A6BE1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EA30AA5A-F92F-40E4-9A0C-5CBAB406118E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EA30AA5A-F92F-40E4-9A0C-5CBAB406118E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EA30AA5A-F92F-40E4-9A0C-5CBAB406118E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EA30AA5A-F92F-40E4-9A0C-5CBAB406118E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
