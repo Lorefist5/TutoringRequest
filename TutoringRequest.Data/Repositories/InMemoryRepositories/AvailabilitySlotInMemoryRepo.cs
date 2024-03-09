@@ -14,15 +14,15 @@ public class AvailabilitySlotInMemoryRepo : GenericInMemoryRepo<AvailabilitySlot
     {
     }
 
-    public async Task<List<AvailabilitySlot>> GetTutorAvailabilitySlotsAsync(Tutor tutor)
-    {
-        return await Task.Run( () => _entities.Where(a => a.TutorId == tutor.Id).ToList());
-    }
+    //public async Task<List<AvailabilitySlot>> GetTutorAvailabilitySlotsAsync(Tutor tutor)
+    //{
+    //    return await Task.Run( () => _entities.Where(a => a.TutorId == tutor.Id).ToList());
+    //}
 
 
 
-    public List<AvailabilitySlot> GetTutorAvailabilitySlots(Tutor tutor)
-    {
-        return _entities.Where(a => a.TutorId == tutor.Id).ToList();
-    }
+    //public List<AvailabilitySlot> GetTutorAvailabilitySlots(Tutor tutor)
+    //{
+    //    return _entities.Where(a => a.TutorId == tutor.Id).ToList();
+    //}
 }

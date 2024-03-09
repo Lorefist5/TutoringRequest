@@ -17,66 +17,41 @@ namespace TutoringRequest.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.1");
 
-            modelBuilder.Entity("TutoringRequest.Models.Domain.AdminAccountInfo", b =>
+            modelBuilder.Entity("AccountRole", b =>
+                {
+                    b.Property<Guid>("AccountsId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("RolesId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("AccountsId", "RolesId");
+
+                    b.HasIndex("RolesId");
+
+                    b.ToTable("AccountRole");
+                });
+
+            modelBuilder.Entity("TutoringRequest.Models.Domain.Account", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("AdminId")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("LastLogIn")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdminId")
-                        .IsUnique();
-
-                    b.ToTable("AdminAccountInfos", (string)null);
-                });
-
-            modelBuilder.Entity("TutoringRequest.Models.Domain.AdminRole", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid?>("AdminAccountInfoId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdminAccountInfoId");
-
-                    b.ToTable("AdminRoles", (string)null);
-                });
-
-            modelBuilder.Entity("TutoringRequest.Models.Domain.Administrator", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid?>("CreatedById")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("InfoId")
+                    b.Property<DateTime>("LastLogIn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("ModifiedById")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -90,9 +65,15 @@ namespace TutoringRequest.Data.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("StudentNumber")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Administrators", (string)null);
+                    b.ToTable("Accounts");
                 });
 
             modelBuilder.Entity("TutoringRequest.Models.Domain.AvailabilitySlot", b =>
@@ -101,10 +82,16 @@ namespace TutoringRequest.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("Day")
                         .HasColumnType("INTEGER");
 
                     b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("ModifiedById")
                         .HasColumnType("TEXT");
 
                     b.Property<TimeSpan>("StartTime")
@@ -117,7 +104,7 @@ namespace TutoringRequest.Data.Migrations
 
                     b.HasIndex("TutorId");
 
-                    b.ToTable("AvailabilitySlots", (string)null);
+                    b.ToTable("AvailabilitySlots");
                 });
 
             modelBuilder.Entity("TutoringRequest.Models.Domain.Course", b =>
@@ -130,19 +117,20 @@ namespace TutoringRequest.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("TEXT");
+
                     b.Property<Guid>("MajorId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("TutorId")
+                    b.Property<Guid?>("ModifiedById")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("MajorId");
 
-                    b.HasIndex("TutorId");
-
-                    b.ToTable("Courses", (string)null);
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("TutoringRequest.Models.Domain.Major", b =>
@@ -151,54 +139,89 @@ namespace TutoringRequest.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("MajorName")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("ModifiedById")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Majors", (string)null);
+                    b.ToTable("Majors");
                 });
 
-            modelBuilder.Entity("TutoringRequest.Models.Domain.Student", b =>
+            modelBuilder.Entity("TutoringRequest.Models.Domain.ResetToken", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
+                    b.Property<Guid>("AccountId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("StudentNumber")
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("ExpirationTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid?>("ModifiedById")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Token")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StudentNumber")
-                        .IsUnique();
+                    b.HasIndex("AccountId");
 
-                    b.ToTable("Students", (string)null);
+                    b.ToTable("ResetTokens");
                 });
 
-            modelBuilder.Entity("TutoringRequest.Models.Domain.Tutor", b =>
+            modelBuilder.Entity("TutoringRequest.Models.Domain.Role", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("StudentNumber")
-                        .IsRequired()
+                    b.Property<Guid?>("CreatedById")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("TutorName")
+                    b.Property<Guid?>("ModifiedById")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RoleName")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tutors", (string)null);
+                    b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("cf3e7e23-4974-43f0-8a2c-b6e8e83fccf8"),
+                            RoleName = "Admin"
+                        },
+                        new
+                        {
+                            Id = new Guid("0e9d9cc1-3aba-4209-8a90-b24fa55c99c8"),
+                            RoleName = "Student"
+                        },
+                        new
+                        {
+                            Id = new Guid("55ed9d2c-049a-44f9-8f69-cda2e90de7b8"),
+                            RoleName = "Tutor"
+                        });
                 });
 
             modelBuilder.Entity("TutoringRequest.Models.Domain.TutoringSection", b =>
@@ -210,10 +233,16 @@ namespace TutoringRequest.Data.Migrations
                     b.Property<Guid>("CourseId")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("EndTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("ModifiedById")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("StartTime")
@@ -233,31 +262,28 @@ namespace TutoringRequest.Data.Migrations
 
                     b.HasIndex("TutorId");
 
-                    b.ToTable("TutoringSections", (string)null);
+                    b.ToTable("TutoringSections");
                 });
 
-            modelBuilder.Entity("TutoringRequest.Models.Domain.AdminAccountInfo", b =>
+            modelBuilder.Entity("AccountRole", b =>
                 {
-                    b.HasOne("TutoringRequest.Models.Domain.Administrator", "Administrator")
-                        .WithOne("AdminAccountInfo")
-                        .HasForeignKey("TutoringRequest.Models.Domain.AdminAccountInfo", "AdminId")
+                    b.HasOne("TutoringRequest.Models.Domain.Account", null)
+                        .WithMany()
+                        .HasForeignKey("AccountsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Administrator");
-                });
-
-            modelBuilder.Entity("TutoringRequest.Models.Domain.AdminRole", b =>
-                {
-                    b.HasOne("TutoringRequest.Models.Domain.AdminAccountInfo", null)
-                        .WithMany("AdminRoles")
-                        .HasForeignKey("AdminAccountInfoId");
+                    b.HasOne("TutoringRequest.Models.Domain.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RolesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TutoringRequest.Models.Domain.AvailabilitySlot", b =>
                 {
-                    b.HasOne("TutoringRequest.Models.Domain.Tutor", "Tutor")
-                        .WithMany("AvailabilitySlots")
+                    b.HasOne("TutoringRequest.Models.Domain.Account", "Tutor")
+                        .WithMany()
                         .HasForeignKey("TutorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -273,11 +299,18 @@ namespace TutoringRequest.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TutoringRequest.Models.Domain.Tutor", null)
-                        .WithMany("Courses")
-                        .HasForeignKey("TutorId");
-
                     b.Navigation("Major");
+                });
+
+            modelBuilder.Entity("TutoringRequest.Models.Domain.ResetToken", b =>
+                {
+                    b.HasOne("TutoringRequest.Models.Domain.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
                 });
 
             modelBuilder.Entity("TutoringRequest.Models.Domain.TutoringSection", b =>
@@ -288,14 +321,14 @@ namespace TutoringRequest.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TutoringRequest.Models.Domain.Student", "Student")
-                        .WithMany("TutoringSections")
+                    b.HasOne("TutoringRequest.Models.Domain.Account", "Student")
+                        .WithMany()
                         .HasForeignKey("StudentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TutoringRequest.Models.Domain.Tutor", "Tutor")
-                        .WithMany("TutoringSections")
+                    b.HasOne("TutoringRequest.Models.Domain.Account", "Tutor")
+                        .WithMany()
                         .HasForeignKey("TutorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -307,34 +340,9 @@ namespace TutoringRequest.Data.Migrations
                     b.Navigation("Tutor");
                 });
 
-            modelBuilder.Entity("TutoringRequest.Models.Domain.AdminAccountInfo", b =>
-                {
-                    b.Navigation("AdminRoles");
-                });
-
-            modelBuilder.Entity("TutoringRequest.Models.Domain.Administrator", b =>
-                {
-                    b.Navigation("AdminAccountInfo")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("TutoringRequest.Models.Domain.Major", b =>
                 {
                     b.Navigation("Courses");
-                });
-
-            modelBuilder.Entity("TutoringRequest.Models.Domain.Student", b =>
-                {
-                    b.Navigation("TutoringSections");
-                });
-
-            modelBuilder.Entity("TutoringRequest.Models.Domain.Tutor", b =>
-                {
-                    b.Navigation("AvailabilitySlots");
-
-                    b.Navigation("Courses");
-
-                    b.Navigation("TutoringSections");
                 });
 #pragma warning restore 612, 618
         }

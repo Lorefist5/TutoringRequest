@@ -1,10 +1,11 @@
 ﻿using System.Linq.Expressions;
+using TutoringRequest.Data.Repositories.Base.Interfaces;
 using TutoringRequest.Models.Domain;
 
 namespace TutoringRequest.Data.Repositories.Interfaces;
 
-public interface ITutorRepository : IGenericRepository<Tutor>
+public interface ITutorRepository : IGenericRoleRepository
 {
-    public List<Course> GetTutorCourses(Tutor tutor);
-    public List<TutoringSection> GetTutoringSections(Tutor tutor);
+
+
 }

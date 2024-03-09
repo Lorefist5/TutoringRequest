@@ -2,14 +2,12 @@
 
 public interface IUnitOfWork
 {
-    public ITutorRepository TutorRepository { get; }
     public IAvailabilitySlotRepository AvailabilitySlotRepository { get; }
-    public IStudentRepository StudentRepository { get; }
     public IMajorRepository MajorRepository { get; }
     public ICourseRepository CourseRepository { get; }
-    public IAdminAccountInfoRepository AdminAccountInfoRepository { get; }
-    public IAdministratorRepository AdministratorRepository { get; }
-    public IAdminRoleRepository AdminRoleRepository { get; }
+    public IAccountRepository AccountRepository { get; }
+    public IRoleRepository RoleRepository { get; }
+    public IResetTokenRepository ResetTokenRepository { get; }
     public void SaveChanges();
     public Task SaveChangesAsync();
 }

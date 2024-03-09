@@ -1,32 +1,23 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
+using TutoringRequest.Data.Repositories.Base;
 using TutoringRequest.Data.Repositories.Interfaces;
 using TutoringRequest.Models.Domain;
+using TutoringRequest.Models.Enums;
 
 namespace TutoringRequest.Data.Repositories.DatabaseRepositories;
 
-public class TutorRepository : GenericRepository<Tutor>, ITutorRepository
+
+public class TutorRepository : GenericRoleRepository, ITutorRepository
 {
-    public TutorRepository(TutoringDbContext context) : base(context)
+    public TutorRepository(TutoringDbContext context) : base(context, DefaultRoles.Tutor.ToString())
     {
-
-
-    }
-    public List<Course> GetTutorCourses(Tutor tutor)
-    {
-        return tutor.Courses;
-    }
-    public List<TutoringSection> GetTutoringSections(Tutor tutor)
-    {
-        return tutor.TutoringSections;
-    }
-    public override IEnumerable<Tutor> GetAll()
-    {
-        return _entities.Include(t => t.AvailabilitySlots);
-    }
-    public override Tutor? FirstOrDefault(Expression<Func<Tutor, bool>> predicate)
-    {
-        return _entities.Include(t => t.AvailabilitySlots).FirstOrDefault(predicate);
+        
     }
 
 }

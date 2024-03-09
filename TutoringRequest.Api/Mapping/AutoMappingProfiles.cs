@@ -4,6 +4,7 @@ using TutoringRequest.Models.DTO.Admin;
 using TutoringRequest.Models.DTO.AvailabilitySlot;
 using TutoringRequest.Models.DTO.Courses;
 using TutoringRequest.Models.DTO.Majors;
+using TutoringRequest.Models.DTO.Roles;
 using TutoringRequest.Models.DTO.Tutors;
 
 namespace TutoringRequest.Api.Mapping;
@@ -12,8 +13,7 @@ public class AutoMappingProfiles : Profile
 {
     public AutoMappingProfiles()
     {
-        CreateMap<TutorDto, Tutor>().ReverseMap();
-        CreateMap<AddTutorRequest, Tutor>().ReverseMap();
+        CreateMap<TutorDto, Account>().ReverseMap();
         CreateMap<AvailabilitySlot, AvailabilityDto>()
             .ForMember(dest => dest.Day, opt => opt.MapFrom(src => src.Day.ToString()));
         CreateMap<AddAvailabilitySlotRequest, AvailabilitySlot>().ReverseMap();
@@ -22,15 +22,13 @@ public class AutoMappingProfiles : Profile
         CreateMap<MajorDto, Major>().ReverseMap();
         CreateMap<CourseDto, Course>().ReverseMap();    
         CreateMap<AddCourseDto, Course>().ReverseMap();
-        CreateMap<AddAdministratorDto, Administrator>().ReverseMap();
-        CreateMap<AdministratorDto, Administrator>();
+        CreateMap<RoleDto, Role>().ReverseMap();
+
     }
     public static IMapper Configure()
     {
         var mapperConfiguration = new MapperConfiguration(cfg =>
         {
-            cfg.CreateMap<TutorDto, Tutor>().ReverseMap();
-            cfg.CreateMap<AddTutorRequest, Tutor>().ReverseMap();
             cfg.CreateMap<AvailabilitySlot, AvailabilityDto>()
                 .ForMember(dest => dest.Day, opt => opt.MapFrom(src => src.Day.ToString()));
             cfg.CreateMap<AddAvailabilitySlotRequest, AvailabilitySlot>().ReverseMap();
