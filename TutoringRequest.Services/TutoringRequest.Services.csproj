@@ -9,11 +9,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\TutoringRequest.Data\TutoringRequest.Data.csproj" />
-    <ProjectReference Include="..\TutoringRequest.Helpers\TutoringRequest.Helpers.csproj" />
     <ProjectReference Include="..\TutoringRequest.Models\TutoringRequest.Models.csproj" />
   </ItemGroup>
 

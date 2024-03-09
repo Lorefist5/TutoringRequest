@@ -15,7 +15,7 @@ abstract public class GenericApiService
         _httpClient = httpClient;
         this._defaultRoute = defaultRoute;
     }
-    public async Task<bool> PostAsync<T>(T dto) where T : class
+    public async Task<HttpResponseMessage> PostAsync<T>(T dto) where T : class
     {
 
         var jsonContent = JsonSerializer.Serialize(dto);
@@ -25,7 +25,7 @@ abstract public class GenericApiService
         // Make a request to the protected endpoint to create a tutor
         var response = await _httpClient.PostAsync(_defaultRoute, content);
 
-        return response.IsSuccessStatusCode;
+        return response;
     }
     public async Task<List<T>> GetAllAsync<T>() where T : class
     {
@@ -83,7 +83,7 @@ abstract public class GenericApiService
             throw new InvalidOperationException("Error parsing JSON response.");
         }
     }
-    public async Task<bool> PutAsync<T>(string urlParams, T data) where T : class
+    public async Task<HttpResponseMessage> PutAsync<T>(string urlParams, T data) where T : class
     {
         if (string.IsNullOrEmpty(urlParams) || data == null)
         {
@@ -100,9 +100,9 @@ abstract public class GenericApiService
         response.EnsureSuccessStatusCode();
 
         // Return true if the update was successful
-        return response.IsSuccessStatusCode;
+        return response;
     }
-    public async Task<bool> DeleteAsync(string id)
+    public async Task<HttpResponseMessage> DeleteAsync(string id)
     {
         if (string.IsNullOrEmpty(id))
         {
@@ -117,10 +117,10 @@ abstract public class GenericApiService
         response.EnsureSuccessStatusCode();
 
         // Return true if the deletion was successful
-        return response.IsSuccessStatusCode;
+        return response;
     }
 
-public GenericApiService AddToken(string token)
+    public GenericApiService AddToken(string token)
     {
         _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         return this;
