@@ -1,6 +1,8 @@
 ﻿using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using TutoringRequest.Models.Attributes;
 using TutoringRequest.Models.DTO.Tutors;
 
 namespace TutoringRequest.Services.HttpClientServices.Base;
@@ -10,10 +12,10 @@ abstract public class GenericApiService
     private HttpClient _httpClient;
     private readonly string _defaultRoute;
 
-    public GenericApiService(HttpClient httpClient, string defaultRoute)
+    public GenericApiService(HttpClient httpClient, string? defaultRoute = null)
     {
         _httpClient = httpClient;
-        this._defaultRoute = defaultRoute;
+        _defaultRoute = defaultRoute ?? GetDefaultRoute();
     }
     public async Task<HttpResponseMessage> PostAsync<T>(T dto) where T : class
     {
@@ -125,6 +127,24 @@ abstract public class GenericApiService
         _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         return this;
     }
+    private string GetDefaultRoute()
+    {
+        var attribute = GetType().GetCustomAttribute<ApiServiceAttribute>();
 
+        if (attribute != null)
+        {
+            return attribute.Name;
+        }
+
+        string className = GetType().Name;
+
+        if (className.EndsWith("ApiService"))
+        {
+            className = className.Substring(0, className.Length - "ApiService".Length);
+        }
+
+        return className;
+    }
+}
 }
 

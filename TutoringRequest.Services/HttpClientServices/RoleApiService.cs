@@ -1,10 +1,11 @@
-﻿using TutoringRequest.Services.HttpClientServices.Base;
+﻿using TutoringRequest.Models.Attributes;
+using TutoringRequest.Services.HttpClientServices.Base;
 
 namespace TutoringRequest.Services.HttpClientServices;
-
+[ApiService("Role")]
 public class RoleApiService : GenericApiService
 {
-    public RoleApiService(HttpClient httpClient, string defaultRoute) : base(httpClient, defaultRoute)
+    public RoleApiService(HttpClient httpClient) : base(httpClient)
     {
     }
 
