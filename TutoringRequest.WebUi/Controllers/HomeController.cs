@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using TutoringRequest.Models.DTO.Tutors;
@@ -5,6 +6,7 @@ using TutoringRequest.Services.HttpClientServices;
 using TutoringRequest.WebUi.Models;
 
 namespace TutoringRequest.WebUi.Controllers;
+
 
 public class HomeController : Controller
 {
@@ -16,14 +18,12 @@ public class HomeController : Controller
         _logger = logger;
         this._tutorApiService = tutorApiService;
     }
-
+    [Authorize]
     public async Task<IActionResult> Index()
     {
-        var response = await _tutorApiService.GetAllAsync<TutorDto>();
-
         return View();
     }
-
+    [AllowAnonymous]
     public IActionResult Privacy()
     {
         return View();

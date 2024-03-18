@@ -29,7 +29,7 @@ public class MajorController : ControllerBase
         return Ok(majorDtos);
     }
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    
     public async Task<ActionResult<MajorDto>> CreateMajor([FromBody] AddMajorDto addMajorDto)
     {
         var majorDomain = _mapper.Map<Major>(addMajorDto);

@@ -1,5 +1,8 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using TutoringRequest.Services.HttpClientServices;
+using TutoringRequest.WebUi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,22 +15,28 @@ builder.Services.AddSingleton<HttpClient>(prov =>
     client.BaseAddress = new Uri(apiBaseUrl);
     return client;
 });
-builder.Services.AddTransient<AuthApiService>();
-builder.Services.AddTransient<RoleApiService>();
-builder.Services.AddTransient<TutorApiService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient<AuthenticatedHttpClientService>();
+builder.Services.AddSingleton<AuthApiService>();
+builder.Services.AddSingleton<RoleApiService>();
+builder.Services.AddSingleton<TutorApiService>();
+builder.Services.AddSingleton<CourseApiService>();
+builder.Services.AddSingleton<MajorApiService>();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 })
 .AddCookie(options =>
 {
-    options.Cookie.Name = "LoginCookie";
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(60); // Adjust as needed
-    
+    options.LoginPath = "/Account/Login"; // or wherever your login path is
+    options.AccessDeniedPath = "/Account/AccessDenied";
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    options.SlidingExpiration = true;
 });
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -43,9 +52,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Account}/{action=Login}/{id?}");

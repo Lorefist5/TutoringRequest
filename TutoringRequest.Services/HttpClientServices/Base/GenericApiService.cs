@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using Microsoft.AspNetCore.Http;
+using System.Net;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
@@ -8,41 +10,61 @@ using TutoringRequest.Models.DTO.Tutors;
 
 namespace TutoringRequest.Services.HttpClientServices.Base;
 
-abstract public class GenericApiService
+public abstract class GenericApiService
 {
-    private HttpClient _httpClient;
+    protected HttpClient _httpClient;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly string _defaultRoute;
 
-    public GenericApiService(HttpClient httpClient, string? defaultRoute = null)
+    public GenericApiService(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, string? defaultRoute = null)
     {
         _httpClient = httpClient;
+        _httpContextAccessor = httpContextAccessor;
         _defaultRoute = defaultRoute ?? GetDefaultRoute();
     }
+
+
+    private HttpRequestMessage CreateRequestMessage(HttpMethod method, string requestUri, HttpContent? content = null)
+    {
+        var message = new HttpRequestMessage(method, requestUri);
+        if (content != null)
+        {
+            message.Content = content;
+        }
+
+        var token = _httpContextAccessor.HttpContext?.Request.Cookies["LoginCookie"];
+        if (!string.IsNullOrWhiteSpace(token))
+        {
+            message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        }
+
+        return message;
+    }
+
     public async Task<HttpResponseMessage> PostAsync<T>(T dto) where T : class
     {
-
         var jsonContent = JsonSerializer.Serialize(dto);
         var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
+        var requestMessage = CreateRequestMessage(HttpMethod.Post, _defaultRoute, content);
 
-
-        // Make a request to the protected endpoint to create a tutor
-        var response = await _httpClient.PostAsync(_defaultRoute, content);
-
-        return response;
+        return await _httpClient.SendAsync(requestMessage);
     }
+
     public async Task<HttpResponse<T>> GetAllAsync<T>() where T : class
     {
-        HttpResponseMessage response = await _httpClient.GetAsync(_defaultRoute);
-        HttpResponse<T> httpResponse = new HttpResponse<T>()
-        {            
+        var requestMessage = CreateRequestMessage(HttpMethod.Get, _defaultRoute);
+        HttpResponseMessage response = await _httpClient.SendAsync(requestMessage);
+
+        HttpResponse<T> httpResponse = new HttpResponse<T>
+        {
             IsSuccess = response.IsSuccessStatusCode,
         };
+
         if (response.IsSuccessStatusCode)
         {
             try
             {
                 string content = await response.Content.ReadAsStringAsync();
-
                 List<T>? items = JsonSerializer.Deserialize<List<T>>(content, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
@@ -52,88 +74,53 @@ abstract public class GenericApiService
             }
             catch (JsonException jsonException)
             {
-                await Console.Out.WriteLineAsync(jsonException.Message);
+                // Handle or log the exception as needed
                 return httpResponse;
             }
         }
-         return httpResponse;
-
-
+        return httpResponse;
     }
+
     public async Task<T?> GetAsync<T>(string parameterName, string parameterValue) where T : class
     {
-        if (string.IsNullOrEmpty(parameterName) || string.IsNullOrEmpty(parameterValue))
-        {
-            throw new ArgumentException("Parameter name and value must not be null or empty.");
-        }
-
-        // Build the query string with the specified parameter
         string query = $"{_defaultRoute}?{parameterName}={Uri.EscapeDataString(parameterValue)}";
+        var requestMessage = CreateRequestMessage(HttpMethod.Get, query);
 
-        HttpResponseMessage response = await _httpClient.GetAsync(query);
-
-        // Check if the request was successful
+        HttpResponseMessage response = await _httpClient.SendAsync(requestMessage);
         response.EnsureSuccessStatusCode();
 
         try
         {
-            // Deserialize the response content to T using System.Text.Json
             string content = await response.Content.ReadAsStringAsync();
-            T? item = JsonSerializer.Deserialize<T>(content, new JsonSerializerOptions
+            return JsonSerializer.Deserialize<T>(content, new JsonSerializerOptions
             {
-                PropertyNameCaseInsensitive = true // This option makes property names case-insensitive
+                PropertyNameCaseInsensitive = true
             });
-
-            return item;
         }
         catch (JsonException)
         {
-            // Handle JSON parsing error (e.g., invalid JSON)
             throw new InvalidOperationException("Error parsing JSON response.");
         }
     }
+
     public async Task<HttpResponseMessage> PutAsync<T>(string urlParams, T data) where T : class
     {
-        if (string.IsNullOrEmpty(urlParams) || data == null)
-        {
-            throw new ArgumentException("ID and data must not be null or empty.");
-        }
-
         string apiUrl = $"{_defaultRoute}/{urlParams}";
         string jsonData = JsonSerializer.Serialize(data);
         HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+        var requestMessage = CreateRequestMessage(HttpMethod.Put, apiUrl, content);
 
-        HttpResponseMessage response = await _httpClient.PutAsync(apiUrl, content);
-
-        // Check if the request was successful
-        response.EnsureSuccessStatusCode();
-
-        // Return true if the update was successful
-        return response;
+        return await _httpClient.SendAsync(requestMessage);
     }
+
     public async Task<HttpResponseMessage> DeleteAsync(string id)
     {
-        if (string.IsNullOrEmpty(id))
-        {
-            throw new ArgumentException("ID must not be null or empty.");
-        }
-
         string apiUrl = $"{_defaultRoute}/{id}";
+        var requestMessage = CreateRequestMessage(HttpMethod.Delete, apiUrl);
 
-        HttpResponseMessage response = await _httpClient.DeleteAsync(apiUrl);
-
-        // Check if the request was successful
-        response.EnsureSuccessStatusCode();
-
-        // Return true if the deletion was successful
-        return response;
+        return await _httpClient.SendAsync(requestMessage);
     }
 
-    public GenericApiService AddToken(string token)
-    {
-        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
-        return this;
-    }
     private string GetDefaultRoute()
     {
         var attribute = GetType().GetCustomAttribute<ApiServiceAttribute>();
@@ -144,7 +131,6 @@ abstract public class GenericApiService
         }
 
         string className = GetType().Name;
-
         if (className.EndsWith("ApiService"))
         {
             className = className.Substring(0, className.Length - "ApiService".Length);

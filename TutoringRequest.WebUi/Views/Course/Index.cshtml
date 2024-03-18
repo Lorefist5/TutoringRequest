@@ -1,0 +1,32 @@
+﻿@using TutoringRequest.Models.DTO.Courses
+@model IEnumerable<CourseDto>
+
+@{
+    ViewData["Title"] = "Course List";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">Courses</h2>
+    <!-- Conditionally display the "Add Course" button for Admin users -->
+    @if (User.IsInRole("Admin"))
+    {
+        <a href="@Url.Action("Create", "Course")" class="btn btn-success mb-3">Add Course</a>
+    }
+    <div class="row">
+        @foreach (var course in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@course.CourseName</h5>
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a href="@Url.Action("Delete", "Course", course)" class="btn btn-danger">Delete</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

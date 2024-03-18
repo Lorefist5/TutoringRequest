@@ -3,14 +3,13 @@ using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 using TutoringRequest.Models.DTO.Auth;
-using TutoringRequest.Services.HttpClientServices.Base;
+
 
 namespace TutoringRequest.Services.HttpClientServices;
 
 public class AuthApiService
 {
     private readonly HttpClient _httpClient;
-    public List<string>? Roles { get; set; }
     public AuthApiService(HttpClient httpClient)
     {
         _httpClient = httpClient;
@@ -28,7 +27,7 @@ public class AuthApiService
             Token = authToken
         };
 
-        if (authResponse.Token != null) Roles = GetRolesFromJwt(authResponse.Token.Token).ToList();
+        if (authResponse.Token != null) authResponse.Roles = GetRolesFromJwt(authResponse.Token.Token).ToList();
         return authResponse;
     }
     public async Task<AuthResponse> RegisterAsync(RegisterDto registerDto)
@@ -44,7 +43,7 @@ public class AuthApiService
             Token = authToken
         };
 
-        if (authResponse.Token != null) Roles = GetRolesFromJwt(authResponse.Token.Token).ToList();
+        if (authResponse.Token != null) authResponse.Roles = GetRolesFromJwt(authResponse.Token.Token).ToList();
         return authResponse;
 
     }

@@ -33,10 +33,11 @@ public class AuthController : ControllerBase
         try
         {
             // Check if the email is already registered
-            var existingUser = await _unitOfWork.AccountRepository.FirstOrDefaultAsync(a => a.Email == dto.Email || a.StudentNumber == dto.StudentNumber);
+            var existingUser = await _unitOfWork.AccountRepository.FirstOrDefaultAsync(a => (a.Email == dto.Email) || (a.StudentNumber == dto.StudentNumber && dto.StudentNumber != null));
+
             if (existingUser != null)
             {
-                return BadRequest("Email or student number are already registered.");
+                return BadRequest("Email or student number are already registered."); 
             }
 
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(dto.Password);

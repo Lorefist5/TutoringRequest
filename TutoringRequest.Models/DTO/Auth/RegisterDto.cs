@@ -13,7 +13,7 @@ public class RegisterDto
     public string? StudentNumber { get; set; }
 
     [Phone(ErrorMessage = "Invalid phone number")]
-    public string PhoneNumber { get; set; }
+    public string? PhoneNumber { get; set; }
 
     [Required(ErrorMessage = "Email is required")]
     [EmailAddress(ErrorMessage = "Invalid email address")]
