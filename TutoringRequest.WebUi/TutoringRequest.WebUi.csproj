@@ -14,8 +14,4 @@
     <ProjectReference Include="..\TutoringRequest.Services\TutoringRequest.Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Major\" />
-  </ItemGroup>
-
 </Project>
