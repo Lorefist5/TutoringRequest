@@ -81,8 +81,10 @@ public class AuthController : ControllerBase
             {
                 return Unauthorized("Invalid email or password.");
             }
-
+            
             var token = _tokenGenerator.GenerateJwtToken(user);
+            user.LastLogIn = DateTime.UtcNow;
+            await _unitOfWork.SaveChangesAsync();
             return Ok(new { Token = token });
         }
         catch (Exception ex)
@@ -140,6 +142,7 @@ public class AuthController : ControllerBase
 
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            user.UpdatedAt = DateTime.UtcNow;
             await _unitOfWork.SaveChangesAsync();
 
 
