@@ -1,0 +1,21 @@
+﻿@using TutoringRequest.Models.DTO.Majors
+@model MajorDto
+@{
+    ViewData["Title"] = "Delete Major";
+}
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form asp-controller="Major" asp-action="DeleteMethod" method="post">
+
+    <input type="hidden" name="id" value="@Model.Id" />
+    <div class="form-group">
+        <label class="fs-3" for="MajorName">Name:</label>
+        <label class="fs-3">@Model.MajorName</label>
+    </div>
+    <div class="form-group">
+        <div class="col-12">
+            <button type="submit" class="btn btn-danger mt-2 w-100">Delete Major</button>
+        </div>
+    </div>
+</form>
