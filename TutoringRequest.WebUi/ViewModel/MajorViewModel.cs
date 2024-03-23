@@ -3,13 +3,13 @@ using TutoringRequest.Models.DTO.Majors;
 
 namespace TutoringRequest.WebUi.ViewModel;
 
-public class CourseViewModel
+public class MajorViewModel
 {
-    public CourseViewModel(CourseDto course, MajorDto major)
+    public MajorViewModel(MajorDto major, IEnumerable<CourseDto> courses)
     {
-        Course = course;
         Major = major;
+        Courses = courses;
     }
-    public CourseDto Course { get; set; }
     public MajorDto Major { get; set; }
+    public IEnumerable<CourseDto> Courses { get; set; }
 }
