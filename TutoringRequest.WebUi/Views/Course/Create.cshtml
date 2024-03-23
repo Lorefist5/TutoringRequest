@@ -1,4 +1,4 @@
-﻿@model CourseViewModel
+﻿@model AddCourseViewModel
 
 <div asp-validation-summary="All" class="text-danger"></div>
 
@@ -13,7 +13,14 @@
         <select class="form-control" id="Major" name="AddCourseDto.MajorId" required>
             @foreach (var major in Model.Majors)
             {
-                <option value="@major.Id">@major.MajorName</option>
+                if(ViewBag.SelectedMajorId == major.Id)
+                {
+                    <option value="@major.Id" selected="selected">@major.MajorName</option>
+                }
+                else
+                {
+                    <option value="@major.Id">@major.MajorName</option>
+                }
             }
         </select>
     </div>
@@ -23,4 +30,6 @@
             <button type="submit" class="btn btn-primary mt-2 w-100">Add Course</button>
         </div>
     </div>
+
+
 </form>
