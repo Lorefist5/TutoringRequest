@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "Account Settings";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="container mt-4">
+    <div class="list-group">
+
+        <a href="@Url.Action("ChangeUsername", "Account")" class="list-group-item list-group-item-action">
+            Change Username
+        </a>
+
+        <a href="@Url.Action("ChangePassword", "Account")" class="list-group-item list-group-item-action">
+            Change Password
+        </a>
+
+        
+        <a href="@Url.Action("UpdateEmail", "Account")" class="list-group-item list-group-item-action">
+            Update Email Address
+        </a>
+
+        
+        <a href="@Url.Action("ConfigureTwoFactor", "Account")" class="list-group-item list-group-item-action">
+            Configure Two-Factor Authentication
+        </a>
+
+   
+        <a href="@Url.Action("PrivacySettings", "Account")" class="list-group-item list-group-item-action">
+            Privacy Settings
+        </a>
+
+        <a href="@Url.Action("NotificationSettings", "Account")" class="list-group-item list-group-item-action">
+            Notification Settings
+        </a>
+
+
+        <form asp-action="Logout" asp-controller="Account" method="post" class="list-group-item">
+            <button type="submit" class="btn btn-danger">Log Out</button>
+        </form>
+    </div>
+</div>

@@ -29,7 +29,11 @@ public class AccountController : Controller
         
         return View();
     }
-
+    [Authorize]
+    public IActionResult Settings()
+    {
+        return View();
+    }
     [HttpPost]
     [AllowAnonymous]
     public async Task<IActionResult> Login(LoginDto loginDto)
@@ -81,6 +85,14 @@ public class AccountController : Controller
         return RedirectToAction("Index", "Home");
     }
 
+
+    [HttpPost]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+        return RedirectToAction("Index", "Home");
+    }
 
 
 }
