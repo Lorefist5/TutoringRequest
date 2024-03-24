@@ -46,7 +46,8 @@ public class TokenGenerator
             Subject = new ClaimsIdentity(new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, account.Id.ToString()),
-                new Claim(ClaimTypes.Name, account.Email),
+                new Claim(ClaimTypes.Email, account.Email),
+                new Claim(ClaimTypes.Name, account.Name),
                 new Claim(ClaimTypes.Role, string.Join(",", stringfyRoles)),
                 new Claim("aud", Audience),
                 new Claim("iss", Issuer),
