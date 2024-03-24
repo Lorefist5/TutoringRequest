@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using TutoringRequest.Services.HttpClientServices;
 using TutoringRequest.WebUi.Services;
 
@@ -16,12 +14,16 @@ builder.Services.AddSingleton<HttpClient>(prov =>
     return client;
 });
 builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddHttpClient<AuthenticatedHttpClientService>();
 builder.Services.AddSingleton<AuthApiService>();
 builder.Services.AddSingleton<RoleApiService>();
 builder.Services.AddSingleton<TutorApiService>();
 builder.Services.AddSingleton<CourseApiService>();
 builder.Services.AddSingleton<MajorApiService>();
+builder.Services.AddSingleton<AccountApiService>();
+builder.Services.AddSingleton<AccountApiService>();
+builder.Services.AddScoped<UserAuthenticationService>();
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
