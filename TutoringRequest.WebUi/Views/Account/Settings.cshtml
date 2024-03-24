@@ -7,36 +7,43 @@
 <div class="container mt-4">
     <div class="list-group">
 
-        <a href="@Url.Action("ChangeUsername", "Account")" class="list-group-item list-group-item-action">
+        <a href="@Url.Action("Username", "Change")" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
             Change Username
+            <span class="bi bi-chevron-right"></span>
         </a>
 
-        <a href="@Url.Action("ChangePassword", "Account")" class="list-group-item list-group-item-action">
+        <a href="@Url.Action("Password", "Change")" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
             Change Password
+            <span class="bi bi-chevron-right"></span>
         </a>
 
-        
-        <a href="@Url.Action("UpdateEmail", "Account")" class="list-group-item list-group-item-action">
+        <a href="@Url.Action("Phone", "Change")" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            Change Phone number
+            <span class="bi bi-chevron-right"></span>
+        </a>
+
+        <a href="@Url.Action("Email", "Change")" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
             Update Email Address
+            <span class="bi bi-chevron-right"></span>
         </a>
 
-        
-        <a href="@Url.Action("ConfigureTwoFactor", "Account")" class="list-group-item list-group-item-action">
+        <a href="@Url.Action("ConfigureTwoFactor", "Account")" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
             Configure Two-Factor Authentication
+            <span class="bi bi-chevron-right"></span>
         </a>
 
-   
-        <a href="@Url.Action("PrivacySettings", "Account")" class="list-group-item list-group-item-action">
+        <a href="@Url.Action("PrivacySettings", "Account")" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
             Privacy Settings
+            <span class="bi bi-chevron-right"></span>
         </a>
 
-        <a href="@Url.Action("NotificationSettings", "Account")" class="list-group-item list-group-item-action">
+        <a href="@Url.Action("NotificationSettings", "Account")" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
             Notification Settings
+            <span class="bi bi-chevron-right"></span>
         </a>
-
 
         <form asp-action="Logout" asp-controller="Account" method="post" class="list-group-item">
-            <button type="submit" class="btn btn-danger">Log Out</button>
+            <button type="submit" class="btn btn-danger w-100">Log Out</button>
         </form>
     </div>
 </div>

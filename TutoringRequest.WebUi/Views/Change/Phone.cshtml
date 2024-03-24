@@ -1,0 +1,16 @@
+﻿@using TutoringRequest.WebUi.ViewModel.Change
+@model ChangePhoneViewModel
+
+<form asp-controller="Change" asp-action="ChangePhone" method="post">
+    <div class="form-group">
+        <label for="PhoneOldNumber">Old Phone Number</label>
+        <input type="text" class="form-control" id="PhoneOldNumber" name="PhoneOldNumber" asp-for="PhoneOldNumber" readonly placeholder="Enter old phone number">
+    </div>
+
+    <div class="form-group">
+        <label for="PhoneNewNumber">New Phone Number</label>
+        <input type="text" class="form-control" id="PhoneNewNumber" name="PhoneNewNumber" asp-for="PhoneNewNumber" placeholder="Enter new phone number">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Change Phone Number</button>
+</form>
