@@ -9,21 +9,15 @@ using TutoringRequest.Models.DTO.Tutors;
 
 namespace TutoringRequest.Api.Mapping;
 
-public class AutoMappingProfiles : Profile
+public partial class AutoMappingProfiles : Profile
 {
     public AutoMappingProfiles()
     {
-        CreateMap<TutorDto, Account>().ReverseMap();
-        CreateMap<AvailabilitySlot, AvailabilityDto>()
-            .ForMember(dest => dest.Day, opt => opt.MapFrom(src => src.Day.ToString()));
-        CreateMap<AddAvailabilitySlotRequest, AvailabilitySlot>().ReverseMap();
-        CreateMap<UpdateAvailabilitySlotRequest, AvailabilitySlot>().ReverseMap();
-        CreateMap<AddMajorDto, Major>().ReverseMap();
-        CreateMap<MajorDto, Major>().ReverseMap();
-        CreateMap<CourseDto, Course>().ReverseMap();    
-        CreateMap<AddCourseDto, Course>().ReverseMap();
-        CreateMap<RoleDto, Role>().ReverseMap();
-
+        ConfigureTutorMappings();
+        ConfigreAvailabilitySlotMappings();
+        ConfigureMajorMappings();
+        ConfigureCourseMappings();
+        ConfigureRoleMappings();
     }
     public static IMapper Configure()
     {
