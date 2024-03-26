@@ -1,1 +1,48 @@
-﻿<h1>Tutors</h1>
+﻿@model IEnumerable<TutoringRequest.Models.DTO.Tutors.TutorDto>
+
+@{
+    ViewData["Title"] = "Tutors";
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Tutors</h1>
+
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Create New</a>
+    </p>
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.StudentNumber)
+                </th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StudentNumber)
+                    </td>
+                    <td>
+                        <a asp-action="Courses" class="btn btn-info btn-sm text-white">Courses</a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" class="btn btn-secondary btn-sm">Edit</a>
+                            <a asp-action="Details" class="btn btn-info btn-sm text-white">Details</a>
+                            <a asp-action="Delete" class="btn btn-danger btn-sm">Delete</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

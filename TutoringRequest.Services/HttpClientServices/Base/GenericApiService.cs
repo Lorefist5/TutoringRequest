@@ -24,22 +24,6 @@ public abstract class GenericApiService
     }
 
 
-    protected HttpRequestMessage CreateRequestMessage(HttpMethod method, string requestUri, HttpContent? content = null)
-    {
-        var message = new HttpRequestMessage(method, requestUri);
-        if (content != null)
-        {
-            message.Content = content;
-        }
-
-        var token = _httpContextAccessor.HttpContext?.Request.Cookies["LoginCookie"];
-        if (!string.IsNullOrWhiteSpace(token))
-        {
-            message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        }
-
-        return message;
-    }
 
     public async Task<HttpResponseMessage> PostAsync<T>(T dto) where T : class
     {
@@ -139,6 +123,23 @@ public abstract class GenericApiService
         var requestMessage = CreateRequestMessage(HttpMethod.Delete, apiUrl);
 
         return await _httpClient.SendAsync(requestMessage);
+    }
+
+    protected HttpRequestMessage CreateRequestMessage(HttpMethod method, string requestUri, HttpContent? content = null)
+    {
+        var message = new HttpRequestMessage(method, requestUri);
+        if (content != null)
+        {
+            message.Content = content;
+        }
+
+        var token = _httpContextAccessor.HttpContext?.Request.Cookies["LoginCookie"];
+        if (!string.IsNullOrWhiteSpace(token))
+        {
+            message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        }
+
+        return message;
     }
 
     private string GetDefaultRoute()
